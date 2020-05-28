@@ -1,0 +1,120 @@
+version: "3.3"
+services:
+  pubsub:
+    container_name: "pubsub"
+    image: solace/solace-pubsub-standard:latest
+    shm_size: 1g
+    ulimits:
+      core: 1
+      nofile:
+        soft: 2448
+        hard: 38048
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 1
+    ports:
+      - '1883:1883'
+      - '8080:8080'
+      - '55555:55555'
+      - '8008:8008'
+    environment:
+      - username_admin_globalaccesslevel=admin
+      - username_admin_password=admin
+      - system_scaling_maxconnectioncount=100
+    logging:
+      driver: none
+
+  control:
+    container_name: "control"
+    build:
+      context: ./control
+      dockerfile: Dockerfile
+    tty: true
+    depends_on:
+      - pubsub
+    environment:
+      - BROKER_HOST=pubsub
+      - SLEEP=35
+
+  sensor_arroyo:
+    container_name: "sensor_arroyo"
+    build:
+      context: ./sensor
+      dockerfile: Dockerfile
+    tty: true
+    restart: always
+    depends_on:
+      - pubsub
+    environment:
+      - BROKER_HOST=pubsub
+      - SLEEP=25
+      - DATASET=arroyo
+
+  sensor_valyermo:
+    container_name: "sensor_valyermo"
+    build:
+      context: ./sensor
+      dockerfile: Dockerfile
+    tty: true
+    restart: always
+    depends_on:
+      - pubsub
+    environment:
+      - BROKER_HOST=pubsub
+      - SLEEP=25
+      - DATASET=valyermo
+
+  sensor_hansen:
+    container_name: "sensor_hansen"
+    build:
+      context: ./sensor
+      dockerfile: Dockerfile
+    tty: true
+    restart: always
+    depends_on:
+      - pubsub
+    environment:
+      - BROKER_HOST=pubsub
+      - SLEEP=25
+      - DATASET=hansen
+
+  sensor_sepulveda:
+    container_name: "sensor_sepulveda"
+    build:
+      context: ./sensor
+      dockerfile: Dockerfile
+    tty: true
+    restart: always
+    depends_on:
+      - pubsub
+    environment:
+      - BROKER_HOST=pubsub
+      - SLEEP=25
+      - DATASET=sepulveda
+
+  satellite:
+    container_name: "satellite"
+    build:
+      context: ./satellite
+      dockerfile: Dockerfile
+    tty: true
+    restart: always
+    depends_on:
+      - pubsub
+    environment:
+      - BROKER_HOST=pubsub
+      - SLEEP=25
+
+  groundstation:
+    container_name: "groundstation"
+    build:
+      context: ./groundstation
+      dockerfile: Dockerfile
+    tty: true
+    restart: always
+    depends_on:
+      - pubsub
+    environment:
+      - BROKER_HOST=pubsub
+      - SLEEP=25

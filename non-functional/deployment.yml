@@ -1,0 +1,44 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: solace-sim
+spec:
+  selector:
+    app: myapp
+  ports:
+    - protocol: "TCP"
+      # Port accessible inside cluster
+      port: 8081
+      # Port to forward to inside the pod
+      targetPort: 8080
+      # Port accessible outside cluster
+      nodePort: 30002
+  type: LoadBalancer
+
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solace-sim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: models
+  template:
+    metadata:
+      labels:
+        app: models
+    spec:
+      containers:
+        - name: publisher
+          image: hdaly1/pub:v1.0.0
+          ports:
+            - containerPort: 1337
+        - name: subscriber
+          image: hdaly1/sub:v1.0.0
+          ports:
+            - containerPort: 1338
