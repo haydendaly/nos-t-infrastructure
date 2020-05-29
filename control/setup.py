@@ -8,6 +8,7 @@ setup(
     version='0.0',
     install_requires=[
         'paho-mqtt',
-        'pandas'
+        'pandas',
+        'flask'
     ]
 )

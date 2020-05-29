@@ -3,18 +3,32 @@ import sys
 import time
 import argparse
 import json
+from flask import Flask, request, make_response, send_file
 
-def control(ip, port, simSpeed, sleep):
-    time.sleep(int(sleep))
-    client = mqtt.Client()
-    print("Starting simulation:", str(ip) + " " + str(port))
-    client.connect(ip, int(port))
-    message = {
-        "simSpeed" : simSpeed
-    }
-    infot = client.publish("topic/control", json.dumps(message))
-    infot.wait_for_publish()
-    print("Simulation Started...")
+app = Flask(__name__, static_url_path='')
+
+@app.route('/log')
+def log():
+    f = open("log.txt")
+    text = f.read()
+    f.close()
+    headers = {"Content-Type": "text/plain"}
+    return make_response(text, 200, headers)
+
+@app.route('/logfile')
+def logfile():
+    return send_file('log.txt')
+
+@app.errorhandler(404)
+def not_founnd(e):
+    return e
+
+def on_message(client, obj, msg):
+    ts = time.gmtime()
+    msg = time.strftime("%Y-%m-%d %H:%M:%S", ts) + " " + str(msg.topic) + ": " + str(msg.payload.decode("utf-8")) + "\n"
+    with open("log.txt", "a") as f:
+        f.write(msg)
+    f.close()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -27,4 +41,17 @@ if __name__ == "__main__":
     parser.add_argument("--sleep", default=argparse.SUPPRESS,
                         help="Sleep before starting simulation")
     args, leftovers = parser.parse_known_args()
-    control(**vars(args))
+    time.sleep(int(vars(args)['sleep']))
+    client = mqtt.Client()
+    print("Starting simulation:", str(vars(args)['ip']) + " " + str(vars(args)['port']))
+    client.connect(vars(args)['ip'], int(vars(args)['port']))
+    message = {
+        "simSpeed" : vars(args)['simSpeed']
+    }
+    infot = client.publish("topic/control", json.dumps(message))
+    infot.wait_for_publish()
+    print("Simulation Started...")
+    client.on_message = on_message
+    client.subscribe("topic/#", 0)
+    client.loop_start()
+    app.run(host='0.0.0.0', port=5000, debug=False)

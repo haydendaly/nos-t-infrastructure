@@ -26,16 +26,24 @@ services:
       driver: none
 
   control:
+    # image: webapp-flask
     container_name: "control"
     build:
       context: ./control
       dockerfile: Dockerfile
     tty: true
+    ports:
+      - 5000:5000
     depends_on:
       - pubsub
     environment:
       - BROKER_HOST=pubsub
-      - SLEEP=35
+      - SLEEP=40
+
+  nginx:
+    image: nginx:1.13.7
+    ports:
+      - 80:80
 
   sensor_arroyo:
     container_name: "sensor_arroyo"
