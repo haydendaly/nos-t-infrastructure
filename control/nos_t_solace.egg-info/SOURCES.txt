@@ -1,6 +1,0 @@
-setup.py
-nos_t_solace.egg-info/PKG-INFO
-nos_t_solace.egg-info/SOURCES.txt
-nos_t_solace.egg-info/dependency_links.txt
-nos_t_solace.egg-info/requires.txt
-nos_t_solace.egg-info/top_level.txt
