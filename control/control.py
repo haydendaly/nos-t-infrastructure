@@ -3,20 +3,25 @@ import sys
 import time
 import argparse
 import json
-from flask import Flask, request, make_response, send_file
+from flask import Flask, request, make_response, send_file, render_template
 
 app = Flask(__name__, static_url_path='')
 
+@app.route('/')
+def root():
+    return """
+        <body>
+           <h1>Testbed</h1>
+        </body>
+        <a href="/log"
+            <button type="button">
+                View Logs
+            </button>
+        </a>
+    """
+
 @app.route('/log')
 def log():
-    f = open("log.txt")
-    text = f.read()
-    f.close()
-    headers = {"Content-Type": "text/plain"}
-    return make_response(text, 200, headers)
-
-@app.route('/logfile')
-def logfile():
     return send_file('log.txt')
 
 @app.errorhandler(404)

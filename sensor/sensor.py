@@ -22,7 +22,7 @@ def on_message(client, obj, msg):
     global start
     start = True
 
-def control(ip, port, sleep, dataset):
+def control(ip, port, sleep, dataset, lat, lon):
     time.sleep(int(sleep))
     client = mqtt.Client()
     client.on_message = on_message
@@ -51,7 +51,11 @@ def control(ip, port, sleep, dataset):
                     "site_no" : str(row['site_no']),
                     "timestamp" : str(index),
                     "discharge" : str(row['discharge (ft^3/s)']),
-                    "qualification" : row['qualification']
+                    "qualification" : row['qualification'],
+                    "loc" : {
+                        "lat" : lat,
+                        "lon" : lon
+                    }
                 }
                 infot = client.publish("topic/sensor", json.dumps(message), qos=2)
                 infot.wait_for_publish()
@@ -66,5 +70,9 @@ if __name__ == "__main__":
                         help="Sleep before start")
     parser.add_argument("--dataset", default=argparse.SUPPRESS,
                         help="Dataset used for emulation")
+    parser.add_argument("--lat", default=argparse.SUPPRESS,
+                        help="Latitude of sensor")
+    parser.add_argument("--lon", default=argparse.SUPPRESS,
+                        help="Longitude of sensor")
     args, leftovers = parser.parse_known_args()
     control(**vars(args))

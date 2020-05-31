@@ -26,7 +26,6 @@ services:
       driver: none
 
   control:
-    # image: webapp-flask
     container_name: "control"
     build:
       context: ./control
@@ -39,6 +38,7 @@ services:
     environment:
       - BROKER_HOST=pubsub
       - SLEEP=40
+      - SIMSPEED=1
 
   nginx:
     image: nginx:1.13.7
@@ -58,6 +58,8 @@ services:
       - BROKER_HOST=pubsub
       - SLEEP=25
       - DATASET=arroyo
+      - LAT=80
+      - LON=10
 
   sensor_valyermo:
     container_name: "sensor_valyermo"
@@ -72,6 +74,8 @@ services:
       - BROKER_HOST=pubsub
       - SLEEP=25
       - DATASET=valyermo
+      - LAT=0
+      - LON=90
 
   sensor_hansen:
     container_name: "sensor_hansen"
@@ -86,6 +90,8 @@ services:
       - BROKER_HOST=pubsub
       - SLEEP=25
       - DATASET=hansen
+      - LAT=81
+      - LON=40
 
   sensor_sepulveda:
     container_name: "sensor_sepulveda"
@@ -100,9 +106,11 @@ services:
       - BROKER_HOST=pubsub
       - SLEEP=25
       - DATASET=sepulveda
+      - LAT=0
+      - LON=50
 
-  satellite:
-    container_name: "satellite"
+  satellite_equitorial:
+    container_name: "satellite_equitorial"
     build:
       context: ./satellite
       dockerfile: Dockerfile
@@ -113,6 +121,23 @@ services:
     environment:
       - BROKER_HOST=pubsub
       - SLEEP=25
+      - ORBIT=equitorial
+      - FIELD_OF_VIEW=200
+
+  satellite_polar:
+    container_name: "satellite_polar"
+    build:
+      context: ./satellite
+      dockerfile: Dockerfile
+    tty: true
+    restart: always
+    depends_on:
+      - pubsub
+    environment:
+      - BROKER_HOST=pubsub
+      - SLEEP=25
+      - ORBIT=polar
+      - FIELD_OF_VIEW=200
 
   groundstation:
     container_name: "groundstation"
