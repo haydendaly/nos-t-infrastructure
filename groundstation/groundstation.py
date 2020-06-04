@@ -1,16 +1,17 @@
-import paho.mqtt.client as mqtt
-import sys
 import time
 import argparse
-import json
+import paho.mqtt.client as mqtt
+
 
 def on_message(client, obj, msg):
     print("Ground Station Started")
     client.on_message = on_satellite_message
     client.subscribe("topic/satellite", 0)
 
+
 def on_satellite_message(client, obj, msg):
     print(str(msg.payload.decode("utf-8")))
+
 
 def control(ip, port, sleep):
     time.sleep(int(sleep))
@@ -19,6 +20,7 @@ def control(ip, port, sleep):
     client.connect(ip, int(port), 60)
     client.subscribe("topic/control", 0)
     client.loop_forever()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
