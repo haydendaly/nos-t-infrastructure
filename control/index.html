@@ -4,7 +4,7 @@
         <title>Testbed</title>
         <style>
             .serif {
-                font-family: Times, serif; 
+                font-family: Times, serif;
             }
 
             .sansserif {
@@ -52,6 +52,14 @@
                 })
             })
             $(function() {
+                $('a#stop').bind('click', function () {
+                    $.get('/stop', {}, function(data) {
+                        $('#log').text('Simulation stopped, download / view logs below');
+                    })
+                    return "True";
+                })
+            })
+            $(function() {
                 $('a#refresh').bind('click', function () {
                     $.get('/log', {}, function(data) {
                         $('#log').text(data);
@@ -73,6 +81,7 @@
         <h1>Testbed</h1>
         <div class=buttons>
             <a href="#" id=start><button class="button">Start</button></a>
+            <a href="#" id=stop><button class="button">Stop</button></a>
             <a href="/log"><button class="button">View Raw Logs</button></a>
             <a href="#" id=refresh><button class="button">Refresh Logs</button></a>
             <a href="#" id=clear><button class="button">Clear Logs</button></a>

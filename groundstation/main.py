@@ -1,24 +1,30 @@
 import time
 import argparse
+import json
 import paho.mqtt.client as mqtt
 
+START = False
 
 def on_message(client, obj, msg):
-    print("Ground Station Started")
-    client.on_message = on_satellite_message
-    client.subscribe("topic/satellite", 0)
-
-
-def on_satellite_message(client, obj, msg):
-    print(str(msg.payload.decode("utf-8")))
-
+    """Sets up message received callback for MQTT"""
+    global START
+    if msg.topic == "topic/control":
+        if json.loads(msg.payload.decode("utf-8"))["type"] == "start":
+            print("Ground Station Started")
+            START = True
+        elif json.loads(msg.payload.decode("utf-8"))["type"] == "stop":
+            print("Ground Station Stopped")
+            START = False
+    elif START and msg.topic == "topic/satellite":
+        print(str(msg.payload.decode("utf-8")))
 
 def control(ip, port, sleep):
+    """Sets up MQTT subscription for simulation"""
     time.sleep(int(sleep))
     client = mqtt.Client()
     client.on_message = on_message
     client.connect(ip, int(port), 60)
-    client.subscribe("topic/control", 0)
+    client.subscribe("topic/#", 0)
     client.loop_forever()
 
 

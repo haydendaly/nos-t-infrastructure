@@ -10,6 +10,7 @@ app = Flask(__name__, static_url_path='')
 @app.route('/')
 def root():
     """Returns the index of the site"""
+    # !!! add static directory to serve files / look at app.py for CVIS
     return send_file('index.html')
 
 
@@ -21,15 +22,30 @@ def log():
 
 @app.route('/start')
 def start():
-    """Starts the simulation by sending out initial parameters to all components"""
+    """Starts the simulation by sending out initial parameters to all components and clears logs"""
+    # clearing logs
+    clear()
+
+    # starting simulation
     message = {
-        "sim_speed": str(sim_speed)
+        "type" : "start",
+        "sim_speed": str(SIM_SPEED)
     }
     infot = client.publish("topic/control", json.dumps(message))
     infot.wait_for_publish()
     print("Simulation Started...")
     return "True"
 
+@app.route('/stop')
+def stop():
+    """Stops the simulation by sending out message to all components"""
+    message = {
+        "type": "stop"
+    }
+    infot = client.publish("topic/control", json.dumps(message))
+    infot.wait_for_publish()
+    print("Simulation Stopped...")
+    return "True"
 
 @app.route('/clear')
 def clear():
@@ -39,12 +55,12 @@ def clear():
 
 
 @app.errorhandler(404)
-def not_founnd(e):
+def not_founnd(error):
     """Return error message to site"""
-    return e
+    return error
 
 
-def on_message(client, obj, msg):
+def on_message(mqttc, obj, msg):
     """Logs all communications on '/topic' to the log file"""
     time_stamp = time.gmtime()
     msg = time.strftime("%Y-%m-%d %H:%M:%S", time_stamp) + " " + \
@@ -72,7 +88,7 @@ if __name__ == "__main__":
     # Connecting to the Solace client
     client = mqtt.Client()
     client.connect(inputs['ip'], int(inputs['port']))
-    sim_speed = str(inputs['sim_speed'])
+    SIM_SPEED = str(inputs['sim_speed'])
     client.on_message = on_message
     client.subscribe("topic/#", 0)
     client.loop_start()

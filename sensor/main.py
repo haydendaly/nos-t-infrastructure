@@ -12,13 +12,18 @@ SUPPORTED_DATASETS = {
 }
 
 
-def on_message(client, obj, msg):
-    """Waits for message from control to start component"""
-    print("Sensor Started")
-    global sim_speed
-    sim_speed = int(json.loads(str(msg.payload.decode("utf-8")))['sim_speed'])
-    global start
-    start = True
+def on_message(mqttc, obj, msg):
+    """Waits for message from control to start or stop"""
+    global START
+    if msg.topic == "topic/control":
+        if json.loads(msg.payload.decode("utf-8"))["type"] == "start":
+            print("Sensor Started")
+            global SIM_SPEED
+            SIM_SPEED = int(json.loads(str(msg.payload.decode("utf-8")))['sim_speed'])
+            START = True
+        elif json.loads(msg.payload.decode("utf-8"))["type"] == "stop":
+            print("Sensor Stopped")
+            START = False
 
 
 def control(ip, port, sleep, dataset, lat, lon):
@@ -40,16 +45,18 @@ def control(ip, port, sleep, dataset, lat, lon):
     client = mqtt.Client()
     client.on_message = on_message
     client.connect(ip, int(port), 60)
-    client.subscribe("topic/control", 0)
+    client.subscribe("topic/#", 0)
     client.loop_start()
 
     # Goes into loop waiting for control and then when true, begins to send messages
     while True:
-        global start
-        if start:
+        global START
+        if START:
             for index, row in data.iterrows():
-                global sim_speed
-                time.sleep(sim_speed)
+                if not START:
+                    break
+                global SIM_SPEED
+                time.sleep(SIM_SPEED)
                 message = {
                     "site_name": dataset,
                     "site_no": str(row['site_no']),
@@ -80,7 +87,7 @@ if __name__ == "__main__":
                         help="Latitude of sensor")
     parser.add_argument("--lon", default=argparse.SUPPRESS,
                         help="Longitude of sensor")
-    start = False
-    sim_speed = 1
+    START = False
+    SIM_SPEED = 1
     args, leftovers = parser.parse_known_args()
     control(**vars(args))
