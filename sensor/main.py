@@ -1,3 +1,11 @@
+"""
+Model simulating streamflow data for a USGS sensor in California.
+Supported datasets include:
+    - arroyo
+    - hansen
+    - sepulveda
+    - valyermo
+"""
 import time
 import argparse
 import json
@@ -16,12 +24,12 @@ def on_message(mqttc, obj, msg):
     """Waits for message from control to start or stop"""
     global START
     if msg.topic == "topic/control":
-        if json.loads(msg.payload.decode("utf-8"))["type"] == "start":
+        if json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "start":
             print("Sensor Started")
             global SIM_SPEED
-            SIM_SPEED = int(json.loads(str(msg.payload.decode("utf-8")))['sim_speed'])
+            SIM_SPEED = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]["sim_speed"])
             START = True
-        elif json.loads(msg.payload.decode("utf-8"))["type"] == "stop":
+        elif json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "stop":
             print("Sensor Stopped")
             START = False
 
@@ -58,14 +66,20 @@ def control(ip, port, sleep, dataset, lat, lon):
                 global SIM_SPEED
                 time.sleep(SIM_SPEED)
                 message = {
-                    "site_name": dataset,
-                    "site_no": str(row['site_no']),
-                    "timestamp": str(index),
-                    "discharge": str(row['discharge (ft^3/s)']),
-                    "qualification": row['qualification'],
-                    "loc": {
-                        "lat": lat,
-                        "lon": lon
+                    "name": "sensor_" + str(row['site_no']),
+                    "description" : "Model simulating streamflow data for a USGS sensor in " +
+                                    dataset + 
+                                    ", California.",
+                    "observation_type" : "Streamflow",
+                    "unit_of_measurement" : "ft^3/s",
+                    "result_time" : str(index),
+                    "properties" : {
+                        "observation" : str(row['discharge (ft^3/s)']),
+                        "qualification" : row['qualification'],
+                    },
+                    "location": {
+                        "latitude": lat,
+                        "longitude": lon
                     }
                 }
                 infot = client.publish(

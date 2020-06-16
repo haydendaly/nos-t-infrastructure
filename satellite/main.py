@@ -1,3 +1,9 @@
+"""
+Model simulating satellite orbits and collecting sensor data.
+Supported orbits include:
+    - polar
+    - equitorial
+"""
 import time
 import argparse
 import json
@@ -10,24 +16,25 @@ ORBITS = ["polar", "equitorial"]
 R = 6373.0
 
 
-def on_message(client, obj, msg):
+def on_message(mqttc, obj, msg):
     """Control message to start simulation to relays messages dependent on global var and topic"""
     global START
     if msg.topic == "topic/control":
-        if json.loads(msg.payload.decode("utf-8"))["type"] == "start":
+        if json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "start":
             print("Satellite Started")
             global SIM_SPEED
-            SIM_SPEED = int(json.loads(str(msg.payload.decode("utf-8")))['sim_speed'])
+            SIM_SPEED = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]['sim_speed'])
             START = True
-        elif json.loads(msg.payload.decode("utf-8"))["type"] == "stop":
+        elif json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "stop":
             print("Satellite Stopped")
             START = False
     elif START and msg.topic == "topic/sensor":
         # !!! Computing distance between points is inaccurate, needs Orekit
+        message_dict = json.loads(str(msg.payload.decode("utf-8")))
         lat2 = radians(
-            float(json.loads(str(msg.payload.decode("utf-8")))['loc']['lat']))
+            float(message_dict["location"]["latitude"]))
         lon2 = radians(
-            float(json.loads(str(msg.payload.decode("utf-8")))['loc']['lon']))
+            float(message_dict["location"]["longitude"]))
         lat1 = radians(LAT)
         lon1 = radians(LON)
         dlat = lat2 - lat1
@@ -38,7 +45,20 @@ def on_message(client, obj, msg):
 
         # Comparing distance to field of view and determining whether to send
         if FIELD_OF_VIEW >= distance:
-            publish.single("topic/satellite", payload=str(msg.payload.decode("utf-8")),
+            # Preparing message for relay
+            message = {
+                "name" : "satellite_" + ORBIT,
+                "description" : "Model simulating satellite in " + ORBIT + " orbit.",
+                "properties" : {
+                    "relayed_observation" : message_dict["properties"]["observation"],
+                    "observation_origin" : message_dict["name"]
+                },
+                "location": {
+                    "latitude": LAT,
+                    "longitude": LON
+                }
+            }
+            publish.single("topic/satellite", payload=json.dumps(message),
                            hostname=str(vars(args)['ip']), port=int(vars(args)['port']))
 
 def move():

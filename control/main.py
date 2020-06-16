@@ -1,3 +1,6 @@
+"""
+Component that starts and stops the simulation. Logs all communications over 'topic/*'.
+"""
 import time
 import argparse
 import json
@@ -28,8 +31,12 @@ def start():
 
     # starting simulation
     message = {
-        "type" : "start",
-        "sim_speed": str(SIM_SPEED)
+        "name" : "control",
+        "description" : "Starts and stops the simulation. Logs all communications over 'topic/*'.",
+        "properties" : {
+            "type" : "start",
+            "sim_speed": str(SIM_SPEED)
+        }
     }
     infot = client.publish("topic/control", json.dumps(message))
     infot.wait_for_publish()
