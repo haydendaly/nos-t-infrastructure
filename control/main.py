@@ -69,6 +69,7 @@ def not_founnd(error):
     """Return error message to site"""
     return error
 
+# !!! Decentralize
 @app.route('/plot.png')
 def plot_png():
     fig = create_figure()
