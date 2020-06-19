@@ -4,8 +4,12 @@ Component that starts and stops the simulation. Logs all communications over 'to
 import time
 import argparse
 import json
+import io
+import random
 import paho.mqtt.client as mqtt
-from flask import Flask, send_file
+from flask import Flask, send_file, Response
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 app = Flask(__name__, static_url_path='')
 
@@ -60,11 +64,25 @@ def clear():
     open('log.txt', 'w').close()
     return "True"
 
-
 @app.errorhandler(404)
 def not_founnd(error):
     """Return error message to site"""
     return error
+
+@app.route('/plot.png')
+def plot_png():
+    fig = create_figure()
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
+
+def create_figure():
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    xs = range(100)
+    ys = [random.randint(1, 50) for x in xs]
+    axis.plot(xs, ys)
+    return fig
 
 
 def on_message(mqttc, obj, msg):
