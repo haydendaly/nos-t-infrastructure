@@ -8,3 +8,5 @@ These are remaining tasks I have semi-ordered by priority.
 5. Add localized resources for nodes of the system like graphs of observations -> would have to add Flask endpoints to components and perform GET on control frontend.
 6. Build a Node.js example component.
 7. Auto-generate docker-compose based off component script. Maybe create a `.yml` to specify connections and other system info.
+8. Fix stop schema bug.
+9. Fix startup bug https://stackoverflow.com/questions/37971961/docker-error-bind-address-already-in-use
