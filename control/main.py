@@ -51,7 +51,11 @@ def start():
 def stop():
     """Stops the simulation by sending out message to all components"""
     message = {
-        "type": "stop"
+        "name" : "control",
+        "description" : "Starts and stops the simulation. Logs all communications over 'topic/*'.",
+        "properties" : {
+            "type" : "stop",
+        }
     }
     infot = client.publish("topic/control", json.dumps(message))
     infot.wait_for_publish()
@@ -94,6 +98,7 @@ def on_message(mqttc, obj, msg):
     with open("log.txt", "a") as file:
         file.write(msg)
     file.close()
+    # !!! Local DB for logs
 
 
 if __name__ == "__main__":
