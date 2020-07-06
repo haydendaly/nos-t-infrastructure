@@ -10,6 +10,7 @@ import time
 import argparse
 import json
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 import pandas as pd
 
 SUPPORTED_DATASETS = {
@@ -23,12 +24,27 @@ SUPPORTED_DATASETS = {
 def on_message(mqttc, obj, msg):
     """Waits for message from control to start or stop"""
     global START
+    
     if msg.topic == "topic/control":
         if json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "start":
             print("Sensor Started")
             global SIM_SPEED
             SIM_SPEED = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]["sim_speed"])
             START = True
+
+            # Sends info to control
+            message = {
+                "name": "sensor_" + SUPPORTED_DATASETS[vars(args)['dataset']],
+                "description" : "Model simulating streamflow data for a USGS sensor in " +
+                                vars(args)['dataset'] + 
+                                ", California.",
+                "properties" : {
+                    "resources" : {}
+                }
+            }
+            publish.single("topic/info", payload=json.dumps(message),
+                           hostname=str(vars(args)['ip']), port=int(vars(args)['port']))
+
         elif json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "stop":
             print("Sensor Stopped")
             START = False

@@ -37,7 +37,7 @@ services:
       - pubsub
     environment:
       - BROKER_HOST=testbed.code-lab.org
-      - SLEEP=40
+      - SLEEP=2
       - SIMSPEED=1
 
   nginx:
@@ -56,7 +56,7 @@ services:
       - pubsub
     environment:
       - BROKER_HOST=testbed.code-lab.org
-      - SLEEP=25
+      - SLEEP=0
       - DATASET=arroyo
       - LAT=80
       - LON=10
@@ -72,7 +72,7 @@ services:
       - pubsub
     environment:
       - BROKER_HOST=testbed.code-lab.org
-      - SLEEP=25
+      - SLEEP=0
       - DATASET=valyermo
       - LAT=0
       - LON=90
@@ -88,7 +88,7 @@ services:
       - pubsub
     environment:
       - BROKER_HOST=testbed.code-lab.org
-      - SLEEP=25
+      - SLEEP=0
       - DATASET=hansen
       - LAT=81
       - LON=40
@@ -104,7 +104,7 @@ services:
       - pubsub
     environment:
       - BROKER_HOST=testbed.code-lab.org
-      - SLEEP=25
+      - SLEEP=0
       - DATASET=sepulveda
       - LAT=0
       - LON=50
@@ -120,7 +120,7 @@ services:
       - pubsub
     environment:
       - BROKER_HOST=testbed.code-lab.org
-      - SLEEP=25
+      - SLEEP=0
       - ORBIT=equitorial
       - FIELD_OF_VIEW=200
 
@@ -135,7 +135,7 @@ services:
       - pubsub
     environment:
       - BROKER_HOST=testbed.code-lab.org
-      - SLEEP=25
+      - SLEEP=0
       - ORBIT=polar
       - FIELD_OF_VIEW=200
 
@@ -150,4 +150,4 @@ services:
       - pubsub
     environment:
       - BROKER_HOST=testbed.code-lab.org
-      - SLEEP=25
+      - SLEEP=0

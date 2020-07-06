@@ -17,6 +17,18 @@ def on_message(client, obj, msg):
         if message_dict["properties"]["type"] == "start":
             print("Ground Station Started")
             START = True
+
+            # Sends info to control
+            message = {
+                "name" : "groundstation",
+                "description" : "Model simulating groundstation connected to all satellites.",
+                "properties" : {
+                    "resources" : {}
+                }
+            }
+            publish.single("topic/info", payload=json.dumps(message),
+                           hostname=str(vars(args)['ip']), port=int(vars(args)['port']))
+
         elif message_dict["properties"]["type"] == "stop":
             print("Ground Station Stopped")
             START = False

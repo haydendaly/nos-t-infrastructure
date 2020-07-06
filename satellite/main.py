@@ -25,9 +25,22 @@ def on_message(mqttc, obj, msg):
             global SIM_SPEED
             SIM_SPEED = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]['sim_speed'])
             START = True
+
+            # Sends info to control
+            message = {
+                "name" : "satellite_" + ORBIT,
+                "description" : "Model simulating satellite in " + ORBIT + " orbit.",
+                "properties" : {
+                    "resources" : {}
+                }
+            }
+            publish.single("topic/info", payload=json.dumps(message),
+                           hostname=str(vars(args)['ip']), port=int(vars(args)['port']))
+
         elif json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "stop":
             print("Satellite Stopped")
             START = False
+
     elif START and msg.topic == "topic/sensor":
         # !!! Computing distance between points is inaccurate, needs Orekit
         message_dict = json.loads(str(msg.payload.decode("utf-8")))

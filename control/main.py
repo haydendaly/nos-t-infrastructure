@@ -29,6 +29,8 @@ def log():
 
 @app.route('/start')
 def start():
+    global info
+    info = []
     """Starts the simulation by sending out initial parameters to all components and clears logs"""
     # clearing logs
     clear()
@@ -60,6 +62,7 @@ def stop():
     infot = client.publish("topic/control", json.dumps(message))
     infot.wait_for_publish()
     print("Simulation Stopped...")
+    print(info)
     return "True"
 
 @app.route('/clear')
@@ -69,7 +72,7 @@ def clear():
     return "True"
 
 @app.errorhandler(404)
-def not_founnd(error):
+def not_found(error):
     """Return error message to site"""
     return error
 
@@ -100,6 +103,10 @@ def on_message(mqttc, obj, msg):
     file.close()
     # !!! Local DB for logs
 
+    if msg.topic == 'topic/info':
+        global info
+        info.append(json.loads(msg.payload.decode("utf-8")))
+
 
 if __name__ == "__main__":
     # Dealing with command inputs
@@ -115,6 +122,9 @@ if __name__ == "__main__":
     args, leftovers = parser.parse_known_args()
     inputs = vars(args)
     time.sleep(int(inputs['sleep']))
+
+    # Setting up component info
+    info = []
 
     # Connecting to the Solace client
     client = mqtt.Client()
