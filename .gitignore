@@ -1,1 +1,4 @@
-groundstation_node/node_modules
+components/depcreated//groundstation_node/node_modules/**/*
+control/node_modules/**/*
+api/node_modules/**/*
+logs/*

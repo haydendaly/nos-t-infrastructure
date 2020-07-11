@@ -22,20 +22,9 @@ def on_message(mqttc, obj, msg):
     if msg.topic == "topic/control":
         if json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "start":
             print("Satellite Started")
-            global SIM_SPEED
-            SIM_SPEED = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]['sim_speed'])
+            global simSpeed
+            simSpeed = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]['simSpeed'])
             START = True
-
-            # Sends info to control
-            message = {
-                "name" : "satellite_" + ORBIT,
-                "description" : "Model simulating satellite in " + ORBIT + " orbit.",
-                "properties" : {
-                    "resources" : {}
-                }
-            }
-            publish.single("topic/info", payload=json.dumps(message),
-                           hostname=str(vars(args)['ip']), port=int(vars(args)['port']))
 
         elif json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "stop":
             print("Satellite Stopped")
@@ -88,6 +77,18 @@ def move():
         else:
             LON += 1
 
+def init(args):
+    # Sends info to control
+    message = {
+        "name" : "satellite_" + ORBIT,
+        "description" : "Model simulating satellite in " + ORBIT + " orbit.",
+        "properties" : {
+            "resources" : {}
+        }
+    }
+    publish.single("topic/init", payload=json.dumps(message),
+                    hostname=str(vars(args)['ip']), port=int(vars(args)['port']))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -104,7 +105,7 @@ if __name__ == "__main__":
     args, leftovers = parser.parse_known_args()
 
     # Assigning global values subject to change
-    SIM_SPEED = 1
+    simSpeed = 1
     ORBIT = str(vars(args)['orbit'])
     if ORBIT not in ORBITS:
         ORBIT = "polar"
@@ -117,6 +118,7 @@ if __name__ == "__main__":
     FIELD_OF_VIEW = int(str(vars(args)['field_of_view']))
     START = False
 
+    init(args)
     # Waiting for PubSub container
     time.sleep(int(vars(args)['sleep']))
 
@@ -127,9 +129,9 @@ if __name__ == "__main__":
     client.subscribe("topic/#", 0)
     client.loop_start()
 
-    # Starting loop to move the satellite according to sim_speed from control
+    # Starting loop to move the satellite according to simSpeed from control
     # !!! Need to add global variable waiting for simulation to start
     while True:
         if START:
             move()
-            time.sleep(SIM_SPEED)
+            time.sleep(simSpeed)

@@ -1,4 +1,5 @@
 const mqtt = require('mqtt');
+// solclient, amqp10
 const { argv } = require('yargs');
 var START = false;
 

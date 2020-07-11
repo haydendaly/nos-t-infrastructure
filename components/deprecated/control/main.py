@@ -29,8 +29,8 @@ def log():
 
 @app.route('/start')
 def start():
-    global info
-    info = []
+    global init
+    init = []
     """Starts the simulation by sending out initial parameters to all components and clears logs"""
     # clearing logs
     clear()
@@ -41,7 +41,7 @@ def start():
         "description" : "Starts and stops the simulation. Logs all communications over 'topic/*'.",
         "properties" : {
             "type" : "start",
-            "sim_speed": str(SIM_SPEED)
+            "simSpeed": str(simSpeed)
         }
     }
     infot = client.publish("topic/control", json.dumps(message))
@@ -62,7 +62,6 @@ def stop():
     infot = client.publish("topic/control", json.dumps(message))
     infot.wait_for_publish()
     print("Simulation Stopped...")
-    print(info)
     return "True"
 
 @app.route('/clear')
@@ -103,9 +102,9 @@ def on_message(mqttc, obj, msg):
     file.close()
     # !!! Local DB for logs
 
-    if msg.topic == 'topic/info':
-        global info
-        info.append(json.loads(msg.payload.decode("utf-8")))
+    if msg.topic == 'topic/init':
+        global init
+        init.append(json.loads(msg.payload.decode("utf-8")))
 
 
 if __name__ == "__main__":
@@ -115,7 +114,7 @@ if __name__ == "__main__":
                         help="IP of (Docker) machine")
     parser.add_argument("--port", default=argparse.SUPPRESS,
                         help="Port of (Docker) machine")
-    parser.add_argument("--sim_speed", default=argparse.SUPPRESS,
+    parser.add_argument("--simSpeed", default=argparse.SUPPRESS,
                         help="Speed of simulation")
     parser.add_argument("--sleep", default=argparse.SUPPRESS,
                         help="Sleep before starting simulation")
@@ -124,12 +123,12 @@ if __name__ == "__main__":
     time.sleep(int(inputs['sleep']))
 
     # Setting up component info
-    info = []
+    init = []
 
     # Connecting to the Solace client
     client = mqtt.Client()
     client.connect(inputs['ip'], int(inputs['port']))
-    SIM_SPEED = str(inputs['sim_speed'])
+    simSpeed = str(inputs['simSpeed'])
     client.on_message = on_message
     client.subscribe("topic/#", 0)
     client.loop_start()

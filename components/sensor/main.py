@@ -28,22 +28,9 @@ def on_message(mqttc, obj, msg):
     if msg.topic == "topic/control":
         if json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "start":
             print("Sensor Started")
-            global SIM_SPEED
-            SIM_SPEED = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]["sim_speed"])
+            global simSpeed
+            simSpeed = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]["simSpeed"])
             START = True
-
-            # Sends info to control
-            message = {
-                "name": "sensor_" + SUPPORTED_DATASETS[vars(args)['dataset']],
-                "description" : "Model simulating streamflow data for a USGS sensor in " +
-                                vars(args)['dataset'] + 
-                                ", California.",
-                "properties" : {
-                    "resources" : {}
-                }
-            }
-            publish.single("topic/info", payload=json.dumps(message),
-                           hostname=str(vars(args)['ip']), port=int(vars(args)['port']))
 
         elif json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "stop":
             print("Sensor Stopped")
@@ -79,8 +66,8 @@ def control(ip, port, sleep, dataset, lat, lon):
             for index, row in data.iterrows():
                 if not START:
                     break
-                global SIM_SPEED
-                time.sleep(SIM_SPEED)
+                global simSpeed
+                time.sleep(simSpeed)
                 message = {
                     "name": "sensor_" + str(row['site_no']),
                     "description" : "Model simulating streamflow data for a USGS sensor in " +
@@ -102,6 +89,20 @@ def control(ip, port, sleep, dataset, lat, lon):
                     "topic/sensor", json.dumps(message), qos=2)
                 infot.wait_for_publish()
 
+def init(args):
+    # Sends init info to control
+    message = {
+        "name": "sensor_" + SUPPORTED_DATASETS[vars(args)['dataset']],
+        "description" : "Model simulating streamflow data for a USGS sensor in " +
+                        vars(args)['dataset'] + 
+                        ", California.",
+        "properties" : {
+            "resources" : {}
+        }
+    }
+    publish.single("topic/init", payload=json.dumps(message),
+                    hostname=str(vars(args)['ip']), port=int(vars(args)['port']))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -117,7 +118,9 @@ if __name__ == "__main__":
                         help="Latitude of sensor")
     parser.add_argument("--lon", default=argparse.SUPPRESS,
                         help="Longitude of sensor")
+
     START = False
-    SIM_SPEED = 1
+    simSpeed = 1
     args, leftovers = parser.parse_known_args()
+    init(args)
     control(**vars(args))

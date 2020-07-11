@@ -1,0 +1,59 @@
+$primary: #15293E;
+$primary-bg: #F8F8F8;
+$primary-text: #FAFAFA;
+$dark-gray: #495057;
+$gray: #777;
+$light-gray: #dddddd;
+$component-bg: #ffffff;
+$highlight: #0275d8;
+
+.header-bg {
+    background-color: $primary;
+}
+
+.header-text {
+    color: $primary-text;
+    font-size: 36;
+    font-family: Helvetica, sans-serif;
+}
+
+.subheader-text {
+    color: $dark-gray;
+    font-size: 36;
+    font-family: Helvetica, sans-serif;
+}
+
+.main {
+    background-color: $primary-bg;
+}
+
+.footer {
+    text-align: center;
+}
+
+.shadow-reg {
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+}
+
+.shadow-dark {
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.6);
+}
+
+.component-table {
+    background-color: $component-bg;
+    border-radius: 10px;
+}
+
+.navbar-custom {
+    border-bottom-width: 1.5px;
+    border-bottom-color: $light-gray;
+}
+
+.navbar-item {
+    color: red;
+}
+
+.navbar-default .navbar-nav > li.item > a { 
+    background-color: #f00; 
+    color: #000;
+}

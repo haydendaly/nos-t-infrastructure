@@ -18,17 +18,6 @@ def on_message(client, obj, msg):
             print("Ground Station Started")
             START = True
 
-            # Sends info to control
-            message = {
-                "name" : "groundstation",
-                "description" : "Model simulating groundstation connected to all satellites.",
-                "properties" : {
-                    "resources" : {}
-                }
-            }
-            publish.single("topic/info", payload=json.dumps(message),
-                           hostname=str(vars(args)['ip']), port=int(vars(args)['port']))
-
         elif message_dict["properties"]["type"] == "stop":
             print("Ground Station Stopped")
             START = False
@@ -55,6 +44,17 @@ def control(ip, port, sleep):
     client.subscribe("topic/#", 0)
     client.loop_forever()
 
+def init(args):
+    # Sends init info to control
+    message = {
+        "name" : "groundstation",
+        "description" : "Model simulating groundstation connected to all satellites.",
+        "properties" : {
+            "resources" : {}
+        }
+    }
+    publish.single("topic/init", payload=json.dumps(message),
+                    hostname=str(vars(args)['ip']), port=int(vars(args)['port']))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -65,4 +65,6 @@ if __name__ == "__main__":
     parser.add_argument("--sleep", default=argparse.SUPPRESS,
                         help="Sleep time before start")
     args, leftovers = parser.parse_known_args()
+    init(args)
+    
     control(**vars(args))

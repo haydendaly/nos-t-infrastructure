@@ -42,12 +42,12 @@ The schema for communication between the components is loosely based off the Sen
     "description" : "Starts and stops the simulation. Logs all communications over 'topic/*'.",
     "properties" : {
         "type" : "start",
-        "sim_speed": 2
+        "simSpeed": 2
     }
 }
 ```
 
-This example is for the start message and to stop the system, a similar message with the `type: "stop"` and no `sim_speed` field will stop the system.
+This example is for the start message and to stop the system, a similar message with the `type: "stop"` and no `simSpeed` field will stop the system.
 
 ### Sensor
 

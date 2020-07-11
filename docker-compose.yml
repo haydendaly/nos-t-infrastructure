@@ -28,7 +28,7 @@ services:
   control:
     container_name: "control"
     build:
-      context: ./control
+      context: ./components/deprecated/control
       dockerfile: Dockerfile
     tty: true
     ports:
@@ -48,7 +48,7 @@ services:
   sensor_arroyo:
     container_name: "sensor_arroyo"
     build:
-      context: ./sensor
+      context: ./components/sensor
       dockerfile: Dockerfile
     tty: true
     restart: always
@@ -64,7 +64,7 @@ services:
   sensor_valyermo:
     container_name: "sensor_valyermo"
     build:
-      context: ./sensor
+      context: ./components/sensor
       dockerfile: Dockerfile
     tty: true
     restart: always
@@ -80,7 +80,7 @@ services:
   sensor_hansen:
     container_name: "sensor_hansen"
     build:
-      context: ./sensor
+      context: ./components/sensor
       dockerfile: Dockerfile
     tty: true
     restart: always
@@ -96,7 +96,7 @@ services:
   sensor_sepulveda:
     container_name: "sensor_sepulveda"
     build:
-      context: ./sensor
+      context: ./components/sensor
       dockerfile: Dockerfile
     tty: true
     restart: always
@@ -112,7 +112,7 @@ services:
   satellite_equitorial:
     container_name: "satellite_equitorial"
     build:
-      context: ./satellite
+      context: ./components/satellite
       dockerfile: Dockerfile
     tty: true
     restart: always
@@ -127,7 +127,7 @@ services:
   satellite_polar:
     container_name: "satellite_polar"
     build:
-      context: ./satellite
+      context: ./components/satellite
       dockerfile: Dockerfile
     tty: true
     restart: always
@@ -142,7 +142,7 @@ services:
   groundstation:
     container_name: "groundstation"
     build:
-      context: ./groundstation
+      context: ./components/groundstation
       dockerfile: Dockerfile
     tty: true
     restart: always
