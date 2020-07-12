@@ -7,7 +7,7 @@ function Dashboard(props) {
     return (
         <div>
             <Container
-                className="component-table shadow-reg my-4"
+                className="component-table shadow-reg doc-dashboard my-4"
             >
                 <div style={{ height: 300 }}>Dashboard</div>
             </Container>

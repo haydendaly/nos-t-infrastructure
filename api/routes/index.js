@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const { getLogs, getComponents } = require('../functions/db');
-const { start, stop } = require('../functions/client');
+const { toggle } = require('../functions/client');
 
 router.get('/logs', (req, res) => {
   const after = _.get(req.query, 'after');
@@ -14,11 +14,11 @@ router.get('/components', (req, res) => {
 });
 
 router.post('/start', (req, res) => {
-  start(req.body, data => res.send(data));
+  toggle('start', { simSpeed: 1, ...req.body }, data => res.send(data));
 });
 
 router.post('/stop', (req, res) => {
-  stop(req.body, data => res.send(data));
+  toggle('stop', req.body, data => res.send(data));
 });
 
 module.exports = router;

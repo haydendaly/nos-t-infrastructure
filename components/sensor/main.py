@@ -24,7 +24,7 @@ SUPPORTED_DATASETS = {
 def on_message(mqttc, obj, msg):
     """Waits for message from control to start or stop"""
     global START
-    
+
     if msg.topic == "topic/control":
         if json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "start":
             print("Sensor Started")
@@ -69,9 +69,9 @@ def control(ip, port, sleep, dataset, lat, lon):
                 global simSpeed
                 time.sleep(simSpeed)
                 message = {
-                    "name": "sensor_" + str(row['site_no']),
+                    "name": "sensor_" + vars(args)['dataset'],
                     "description" : "Model simulating streamflow data for a USGS sensor in " +
-                                    dataset + 
+                                    dataset +
                                     ", California.",
                     "observation_type" : "Streamflow",
                     "unit_of_measurement" : "ft^3/s",
@@ -92,9 +92,9 @@ def control(ip, port, sleep, dataset, lat, lon):
 def init(args):
     # Sends init info to control
     message = {
-        "name": "sensor_" + SUPPORTED_DATASETS[vars(args)['dataset']],
+        "name": "sensor_" + vars(args)['dataset'],
         "description" : "Model simulating streamflow data for a USGS sensor in " +
-                        vars(args)['dataset'] + 
+                        vars(args)['dataset'] +
                         ", California.",
         "properties" : {
             "resources" : {}

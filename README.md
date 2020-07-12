@@ -1,4 +1,4 @@
-# Simulation Architecture
+## Simulation Architecture
 
 This repo contains an initial infrastructure for orchestrating simulation components.
 
@@ -10,17 +10,17 @@ It consists of a control module, four ground sensors emulating water stream data
 
 To interact with the system, go to `localhost:5000` in the browser and you will be presented with a dashboard.
 
-### Prerequisites
+#### Prerequisites
 
 The only prerequisite is having Docker installed on your system.
 
-### Usage
+#### Usage
 
 To start the simulation, run the following command.
 
-```
+```sh
 docker-compose up --build
 ```
 
-### Questions?
+#### Questions?
 Direct any questions to hdaly1@stevens.edu

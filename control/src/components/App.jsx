@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Nav } from 'react-bootstrap';
+import { Nav, NavItem } from 'react-bootstrap';
+import '../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 import Dashboard from './Dashboard';
 import Logs from './Logs';
@@ -32,15 +33,15 @@ function App(props) {
                 className="mx-4 navbar-custom"
                 variant="tabs"
             >
-                <Nav.Item className="item">
-                    <Nav.Link eventKey="dashboard">Dashboard</Nav.Link>
-                </Nav.Item>
-                <Nav.Item className="item">
-                    <Nav.Link eventKey="logs">Logs</Nav.Link>
-                </Nav.Item>
-                <Nav.Item className="item">
-                    <Nav.Link eventKey="documentation">Documentation</Nav.Link>
-                </Nav.Item>
+                <NavItem style={nav} className="navitem">
+                    <Nav.Link style={navText} eventKey="dashboard">Dashboard</Nav.Link>
+                </NavItem>
+                <NavItem style={nav} className="navitem">
+                    <Nav.Link style={navText} eventKey="logs">Logs</Nav.Link>
+                </NavItem>
+                <NavItem style={nav} className="navitem">
+                    <Nav.Link style={navText} eventKey="documentation">Documentation</Nav.Link>
+                </NavItem>
             </Nav>
             {key === 'dashboard' ? <Dashboard components={components} simulationState={simulationState} toggleSimulation={toggleSimulation} /> : false}
             {key === 'logs' ? <Logs logs={logs} /> : false}
@@ -48,5 +49,10 @@ function App(props) {
         </div>
     );
 };
+
+const nav = {};
+const navText = {
+    color: '#496381'
+}  
 
 export default App;

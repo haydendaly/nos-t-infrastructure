@@ -40,7 +40,11 @@ module.exports = (env, argv) => {
                         'css-loader',
                         'sass-loader',
                     ],
-                }
+                },
+                // {
+                //     test: /\.md$/i,
+                //     use: 'raw-loader'
+                // }
             ]
         },
         plugins: [

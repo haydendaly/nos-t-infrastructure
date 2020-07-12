@@ -31,26 +31,16 @@ const getClient = () => {
     return _client;
 };
 
-const start = (params, callback) => {
+const toggle = (type, params, callback) => {
+    if (type !== 'start' && type !== 'stop') {
+        callback(false);
+    }
     const client = getClient();
     client.publish('topic/control', JSON.stringify({ 
         ...header,
         time: Math.round((new Date()).getTime() / 1000),
         properties: { 
-            type: "start",
-            simSpeed: 1,
-            ...params
-        }
-    }), err => callback(!err));
-};
-
-const stop = (params, callback) => {
-    const client = getClient();
-    client.publish('topic/control', JSON.stringify({ 
-        ...header,
-        time: Math.round((new Date()).getTime() / 1000),
-        properties: { 
-            type: "stop",
+            type: type,
             ...params
         }
     }), err => callback(!err));
@@ -59,6 +49,5 @@ const stop = (params, callback) => {
 module.exports = {
     initClient,
     getClient,
-    start,
-    stop
+    toggle
 };

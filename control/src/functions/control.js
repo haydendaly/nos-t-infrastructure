@@ -1,53 +1,21 @@
 import { useState } from 'react';
+import _ from 'lodash';
+import helper from './helper';
 
 const url = process.env.API_URL ? process.env.API_URL : 'http://localhost:3000';
 
-const request = (url, type="GET", send, body=null, defaultValue={}) => {
-    body = body ? { body: JSON.stringify(body) } : {};
-    fetch(
-        url,
-        { 
-            method: type, 
-            ...body,
-            headers: {
-                Accept: 'application/json',
-                'Content-Type' : 'application/json'
-            }
-        }
-    )
-        .then(res => res.json())
-        .then(response => { 
-            send(response);
-        })
-        .catch(err => {
-            console.log(JSON.stringify(err));
-            send(defaultValue);
-        });
-}
-
-const start = (simSpeed, callback) => {
-    request(
-        `${url}/start`,
+const toggle = (type, properties, callback) => {
+    helper.request(
+        `${url}/${type}`,
         'POST',
         response => callback(response),
-        { simSpeed },
-        {}
-    );
-};
-
-
-const stop = callback => {
-    request(
-        `${url}/stop`,
-        'POST',
-        response => callback(response),
-        null,
+        properties,
         {}
     );
 };
 
 const getLogs = (after, callback) => {
-    request(
+    helper.request(
         `${url}/logs` + (after > 0 ? `?after=${after}` : ''),
         'GET',
         response => callback(response),
@@ -57,14 +25,14 @@ const getLogs = (after, callback) => {
 };
 
 const getComponents = callback => {
-    request(
+    helper.request(
         `${url}/components`,
         'GET',
         response => callback(response),
         null,
         []
     );
-}
+};
 
 function useControlState() {
     const [key, setKey] = useState("dashboard");
@@ -74,12 +42,9 @@ function useControlState() {
 
     const updateLogs = () => {
         if (key === 'logs') {
-            // const len = logs.length;
-            // control.getLogs(len, data => {
-            //     setLogs(logs.slice(len, logs.length).concat(data));
-            // });
             getLogs(0, data => {
-                setLogs(data);
+                data = logs.concat(data);
+                setLogs(_.uniqWith(data, _.isEqual));
             });
         };
     };
@@ -95,13 +60,13 @@ function useControlState() {
     const toggleSimulation = (action, callback, properties={}) => {
         if (action === 'start' && (simulationState === 'Stopped' || simulationState === 'Ready')) {
             const simSpeed = _.get(properties, simSpeed, 1);
-            start(...simSpeed, data => {
+            toggle(action, { simSpeed, ...properties }, data => {
                 setSimulationState('Running');
-                callback(data)
+                callback(data);
             });
         } else if (action === 'stop' && (simulationState === 'Running')) {
             setSimulationState('Stopped');
-            stop(data => callback(data));
+            toggle(action, properties, data => callback(data));
         };
     };
 

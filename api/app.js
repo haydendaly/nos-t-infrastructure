@@ -6,6 +6,7 @@ const logger = require('morgan');
 const cors = require('cors');
 
 const indexRouter = require('./routes/index');
+const resourceRouter = require('./routes/resource');
 const { initDb, downloadLogs } = require('./functions/db');
 const { initClient } = require('./functions/client');
 
@@ -19,8 +20,9 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/resource', resourceRouter);
 app.use((req, res) => {
-  res.status(404).send({ message: "Invalid route"});
+  res.status(404).end({ message: "Invalid route"});
 });
 
 initDb(err => {
@@ -33,10 +35,6 @@ initClient('testbed.code-lab.org', 1883, err => {
   if (err) {
     throw err;
   };
-});
-
-app.use(function (req, res, next) {
-  next(createError(404));
 });
 
 app.use(function (err, req, res, next) {

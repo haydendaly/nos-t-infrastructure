@@ -55,22 +55,6 @@ const addLog = (topic, data, callback) => {
     });
 };
 
-const getLogs = (callback, after) => {
-    if (!after) {
-        after = 0;
-    };
-    const db = getDb();
-    db.find({ type: 'log' }, (err, data) => {
-        data = data && data.length !== 0 ? data.slice(after, data.length - 1) : [];
-        callback(data.map(log => { 
-            log.key = log._id;
-            delete log.type;
-            delete log._id;
-            return log;
-        }));
-    });
-};
-
 const addComponent = (data, callback) => {
     const db = getDb();
     db.appendItem({
@@ -82,15 +66,39 @@ const addComponent = (data, callback) => {
     });
 };
 
+const getLogs = (callback, after) => {
+    if (!after) {
+        after = 0;
+    };
+    const db = getDb();
+    db.find({ type: 'log' }, (err, data) => {
+        if (err || data.length === 0) {
+            callback([]);
+        } else {
+            data = data ? data.slice(after, data.length - 1) : [];
+            callback(data.map(log => { 
+                log.key = log._id;
+                delete log.type;
+                delete log._id;
+                return log;
+            }));
+        };
+    });
+};
+
 const getComponents = callback => {
     const db = getDb();
     db.find({ type: 'component' }, (err, data) => {
-        callback(data.map(component => { 
-            component.key = component._id;
-            delete component.type;
-            delete component._id;
-            return component;
-        }));
+        if (err || data.length === 0) {
+            callback([]);
+        } else {
+            callback(data.map(component => { 
+                component.key = component._id;
+                delete component.type;
+                delete component._id;
+                return component;
+            }));
+        };
     });
 };
 

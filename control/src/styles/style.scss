@@ -1,11 +1,13 @@
 $primary: #15293E;
-$primary-bg: #F8F8F8;
+$primary-bg: #f6f7f9;
 $primary-text: #FAFAFA;
-$dark-gray: #495057;
-$gray: #777;
+$dark-gray: #2b3c57;
+$header-gray:#fafafa;
 $light-gray: #dddddd;
+$off-white: #f7f7f7;
 $component-bg: #ffffff;
-$highlight: #0275d8;
+$highlight: #4f8de9;
+$nav-text: #496381;
 
 .header-bg {
     background-color: $primary;
@@ -19,16 +21,31 @@ $highlight: #0275d8;
 
 .subheader-text {
     color: $dark-gray;
-    font-size: 36;
+    font-size: 32;
     font-family: Helvetica, sans-serif;
 }
 
-.main {
+#main {
     background-color: $primary-bg;
+    position: relative;
+    min-height: 100vh;
 }
 
-.footer {
-    text-align: center;
+#content-wrap {
+    padding-bottom: 2.5rem;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 2.5rem;
+}
+
+#footer-text {
+    color: $nav-text;
+    font-size: 16px;
+    font-family: Helvetica, sans-serif;
 }
 
 .shadow-reg {
@@ -39,21 +56,50 @@ $highlight: #0275d8;
     box-shadow: 0px 0px 3px rgba(0,0,0,0.6);
 }
 
-.component-table {
-    background-color: $component-bg;
-    border-radius: 10px;
-}
-
 .navbar-custom {
     border-bottom-width: 1.5px;
     border-bottom-color: $light-gray;
 }
 
-.navbar-item {
-    color: red;
-}
-
 .navbar-default .navbar-nav > li.item > a { 
     background-color: #f00; 
     color: #000;
+}
+
+.table-container {
+    background-color: $component-bg;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.doc-container {
+    background-color: $component-bg;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.doc-dashboard {
+    background-color: $component-bg;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.log-table {
+    margin: 0px;
+    border-top: none;
+}
+
+.log-table-header {
+    background-color: $off-white;
+    border-top: none;
+    color: $header-gray;
+}
+
+.log-table-header-top {
+    background-color: $off-white;
+    border-top: none;
+}
+
+.navitem.active {
+    background-color: 'rgba(0,0,0,0)';
 }
