@@ -4,13 +4,16 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const http = require('http');
+const WebSocket = require('ws');
 
 const indexRouter = require('./routes/index');
 const resourceRouter = require('./routes/resource');
 const { initDb, downloadLogs } = require('./functions/db');
 const { initClient } = require('./functions/client');
+const { wsHandler } = require('./functions/websockets');
 
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -22,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/resource', resourceRouter);
 app.use((req, res) => {
-  res.status(404).end({ message: "Invalid route"});
+  res.status(404).end({ message: "Invalid route" });
 });
 
 initDb(err => {
@@ -49,6 +52,15 @@ app.use(function (err, req, res, next) {
 
 process.on('SIGINT', () => {
   downloadLogs(() => process.exit(0));
+});
+
+// Establish Websocket Tunneling
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+wss.on('connection', ws => wsHandler('testbed.code-lab.org', 1883, ws));
+
+server.listen(2000, () => {
+  console.log('Websocket initialized');
 });
 
 module.exports = app;

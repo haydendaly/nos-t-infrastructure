@@ -7,6 +7,7 @@ const header = {
     description : "Interfaces the simulation with the user allowing for API and GUI control.",
     properties : {}
 };
+
 let _client;
 
 const initClient = (host, port, callback) => {

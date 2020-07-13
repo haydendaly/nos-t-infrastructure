@@ -14,15 +14,13 @@ function App(props) {
         setKey,
         logs,
         components,
-        updateLogs,
-        updateComponents,
+        update,
         simulationState,
         toggleSimulation
     } = control.useControlState();
 
     useEffect(() => {
-        updateLogs();
-        updateComponents();
+        update();
     }, [key]);
 
     return (

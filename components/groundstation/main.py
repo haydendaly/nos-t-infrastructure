@@ -50,7 +50,12 @@ def init(args):
         "name" : "groundstation",
         "description" : "Model simulating groundstation connected to all satellites.",
         "properties" : {
-            "resources" : {}
+            "resources" : {},
+            "subscriptions" : [
+                "topic/control",
+                "topic/satellite"
+            ],
+            "type" : "groundstation"
         }
     }
     publish.single("topic/init", payload=json.dumps(message),

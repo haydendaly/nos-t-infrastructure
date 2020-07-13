@@ -83,7 +83,12 @@ def init(args):
         "name" : "satellite_" + ORBIT,
         "description" : "Model simulating satellite in " + ORBIT + " orbit.",
         "properties" : {
-            "resources" : {}
+            "resources" : {},
+            "subscriptions" : [
+                "topic/control",
+                "topic/sensor"
+            ],
+            "type" : "satellite"
         }
     }
     publish.single("topic/init", payload=json.dumps(message),

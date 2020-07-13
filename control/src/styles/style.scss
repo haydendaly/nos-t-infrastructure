@@ -84,22 +84,44 @@ $nav-text: #496381;
     overflow: hidden;
 }
 
-.log-table {
+.navitem.active {
+    background-color: 'rgba(0,0,0,0)';
+}
+
+.table-style {
     margin: 0px;
     border-top: none;
 }
 
-.log-table-header {
+.table-header {
     background-color: $off-white;
     border-top: none;
     color: $header-gray;
 }
 
-.log-table-header-top {
+.table-header-top {
     background-color: $off-white;
     border-top: none;
 }
 
-.navitem.active {
-    background-color: 'rgba(0,0,0,0)';
+.table-header-column { 
+    padding: 100px;
+}
+
+.table-header-text { 
+    font-size: 14px; 
+    font-weight: 400; 
+    color: #787878;
+}
+
+.table-row-text { 
+    font-size: 13px;
+    font-weight: 300; 
+    color: #787878;
+}
+
+.table-row-text-small {
+    font-size: 12px;
+    font-weight: 400;
+    color: #787878;
 }

@@ -3,17 +3,18 @@ import { Container } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn as THC } from 'react-bootstrap-table';
 import '../styles/style.scss';
 
-function Dashboard({ components }) {
+function Dashboard({ components, simulationState, toggleSimulation }) {
 
     let data = components.map(component => {
+        let subscriptions = _.get(component.properties, 'subscriptions');
         return {
             key: component.key,
             component: component.name,
             description: component.description,
-            subscriptions: component.topic,
-            resource: component.resources ? 'Here' : 'None',
-            type: component.topic,
-            status: 'Ready'
+            subscriptions: subscriptions ? subscriptions.join(', ') : 'None', 
+            resource: _.get(component.properties, 'resource', 'None'),
+            type: _.get(component.properties, 'type', 'N/A'),
+            status: simulationState
         };
     });
 
@@ -22,30 +23,67 @@ function Dashboard({ components }) {
             <BootstrapTable
                 data={data}
                 bordered={false}
-                height='600'
                 bodyStyle={{ overflow: 'overlay' }}
                 scrollTop={'Bottom'}
                 options={{ noDataText: 'No components yet, start the simulation!' }}
                 version='4'
                 hover
-                headerContainerClass='log-table-header'
+                headerContainerClass='table-header'
                 className='table-container shadow-reg my-4'
             >
                 <THC isKey dataField='key' hidden></THC>
-                <THC dataField='component' style={headerColumn} thStyle={header} trStyle={row} tdStyle={{ ...text, fontWeight: 13, fontWeight: '400' }} width='120' dataSort>Component</THC>
-                <THC dataField='description' style={headerColumn} thStyle={header} trStyle={row} tdStyle={text} width='320'>Description</THC>
-                <THC dataField='subscriptions' style={headerColumn} thStyle={header} trStyle={row} tdStyle={text} width='160'>Subscriptions</THC>
-                <THC dataField='resource' style={headerColumn} thStyle={header} trStyle={row} tdStyle={text} width='160'>Resource</THC>
-                <THC dataField='type' style={headerColumn} thStyle={header} trStyle={row} tdStyle={text} width='160'>Type</THC>
-                <THC dataField='status' style={headerColumn} thStyle={header} trStyle={row} tdStyle={text} width='160'>Status</THC>
+                <THC dataField='component'
+                    thStyle={header}
+                    tdStyle={textSmall}
+                    width='150' 
+                    dataSort
+                >
+                    Component
+                </THC>
+                <THC dataField='description'
+                    thStyle={header}
+                    tdStyle={text}
+                >
+                    Description
+                </THC>
+                <THC dataField='subscriptions'
+                    thStyle={header}
+                    tdStyle={text}
+                    width='200'
+                    dataSort
+                >
+                    Subscriptions
+                </THC>
+                <THC dataField='resource'
+                    thStyle={header}
+                    tdStyle={text} 
+                    width='100'
+                >
+                    Resource
+                </THC>
+                <THC dataField='type'
+                    thStyle={header}
+                    tdStyle={text}
+                    width='110'
+                    dataSort
+                >
+                    Type
+                </THC>
+                <THC dataField='status'
+                    thStyle={header}
+                    tdStyle={{ ...text, fontWeight: 400, color: simulationState === 'Ready' ? 'green' : simulationState === 'Running' ? 'blue' : 'red'}}
+                    width='80'
+                    dataSort
+                >
+                    Status
+                </THC>
             </BootstrapTable>
         </Container>
     );
 };
 
-const headerColumn = { padding: 100 };
-const header = { fontSize: 15, fontWeight: '400', color: '#787878' };
-const row = { margin: 5, backgroundColor: 'red' };
-const text = { fontSize: 14, fontWeight: '300', color: '#787878' };
+const header = { fontSize: 14, fontWeight: '400', color: '#787878' };
+const text = { fontSize: 13, fontWeight: '300', color: '#787878' };
+const textSmall = { fontSize: 12, fontWeight: '400', color: '#787878' };
 
 export default Dashboard;

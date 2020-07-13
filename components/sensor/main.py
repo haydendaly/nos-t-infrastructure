@@ -97,7 +97,11 @@ def init(args):
                         vars(args)['dataset'] +
                         ", California.",
         "properties" : {
-            "resources" : {}
+            "resources" : {},
+            "subscriptions" : [
+                "topic/control"
+            ],
+            "type" : "sensor"
         }
     }
     publish.single("topic/init", payload=json.dumps(message),

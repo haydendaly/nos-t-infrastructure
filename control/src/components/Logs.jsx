@@ -6,7 +6,6 @@ const theme = require('../styles/jsonpretty.css');
 import '../styles/style.scss';
 
 function JSONCell(cell, row, chosen, setChosen) {
-    console.log("cell called")
     return (
         <div
             onClick={() => rowClick(row, chosen, setChosen)}
@@ -15,11 +14,11 @@ function JSONCell(cell, row, chosen, setChosen) {
                 chosen.includes(row.key) ? (
                     <JSONPretty data={cell} theme={theme}></JSONPretty>
                 ) : (
-                        <span style={{ ...text, fontSize: 13 }}>{JSON.stringify(cell, null, 2)}</span>
+                        <span className='table-row-text-small'>{JSON.stringify(cell, null, 2)}</span>
                     )
             }
         </div>
-    )
+    );
 };
 
 function rowClick(row, chosen, setChosen) {
@@ -59,23 +58,42 @@ function Logs({ logs }) {
             <BootstrapTable
                 data={data}
                 bordered={false}
-                height='600'
+                height={data.length > 14 ? '600' : undefined}
                 bodyStyle={{ overflow: 'overlay' }}
                 scrollTop={'Bottom'}
                 options={{ noDataText: 'No logs yet, start the simulation!' }}
                 version='4'
                 hover
-                headerContainerClass='log-table-header'
+                headerContainerClass='table-header'
                 className='table-container shadow-reg my-4'
             >
                 <THC isKey dataField='key' hidden></THC>
-                <THC dataField='time' style={headerColumn} thStyle={header} trStyle={row} tdStyle={{ ...text, fontWeight: 12, fontWeight: '400' }} width='120' dataSort>Time</THC>
-                <THC dataField='source' style={headerColumn} thStyle={header} trStyle={row} tdStyle={text} width='170'>Source</THC>
-                <THC dataField='topic' style={headerColumn} thStyle={header} trStyle={row} tdStyle={text} width='160'>Topic</THC>
-                <THC dataField='message'
-                    style={headerColumn} 
+                <THC dataField='time' 
                     thStyle={header}
-                    trStyle={row}
+                    tdStyle={textSmall}
+                    width='120' 
+                    dataSort
+                    defaultSortOrder='desc'
+                >
+                        Time
+                </THC>
+                <THC dataField='source' 
+                    thStyle={header}
+                    tdStyle={text}
+                    width='170' 
+                    dataSort
+                >
+                        Source
+                </THC>
+                <THC dataField='topic' 
+                    thStyle={header}
+                    tdStyle={text}
+                    width='140' 
+                    dataSort>
+                        Topic
+                </THC>
+                <THC dataField='message'
+                    thStyle={header}
                     tdStyle={text}
                     dataFormat={(cell, row) => JSONCell(cell, row, chosen, setChosen)}
                 >
@@ -86,9 +104,8 @@ function Logs({ logs }) {
     );
 };
 
-const headerColumn = { padding: 100};
 const header = { fontSize: 14, fontWeight: '400', color: '#787878' };
-const row = { margin: 5, backgroundColor: 'red' };
 const text = { fontSize: 13, fontWeight: '300', color: '#787878' };
+const textSmall = { fontSize: 12, fontWeight: '400', color: '#787878' };
 
 export default Logs;

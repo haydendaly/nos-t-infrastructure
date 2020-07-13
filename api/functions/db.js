@@ -1,6 +1,8 @@
 const assert = require('assert');
-const TinyDB = require('tinydb');
+const low = require('lowdb');
+const FileAsync = require('lowdb/adapters/FileAsync');
 const fs = require('fs');
+const uuid = require('uuid');
 const { initDate, download } = require('./download');
 
 let _db;
@@ -8,24 +10,24 @@ let _db;
 const initDb = callback => {
     if (_db) {
         console.warn("Db already initialized");
+        return callback(null, _db);
     } else {
         const date = initDate();
         if (!fs.existsSync('../logs/')) {
             fs.mkdirSync('../logs/');
         };
         fs.mkdirSync(`../logs/${date}`);
-        _db = new TinyDB(`../logs/${date}/local.db`);
-        _db.onReady = () => {
-            _db.setInfo('title', 'Local db', (err, key, value) => {
-                if (err) {
-                    console.log(err);
-                    return _db;
-                };
-                console.log(value, 'initialized');
-            });
-        }
-    }
-    return callback(null, _db);
+        adapter = new FileAsync(`../logs/${date}/local.db`);
+        low(adapter).then(db => {
+            _db = db;
+            _db.defaults({ logs: [], components: [] })
+                .write()
+                .then(() => {
+                    console.log('Db initialized')
+                    return callback(null, _db);
+                });
+        });
+    };
 };
 
 const getDb = () => {
@@ -33,73 +35,62 @@ const getDb = () => {
     return _db;
 };
 
-const findById = (id, callback) => {
-    const db = getDb();
-    db.findById(id, (err, data) => {
-        callback(data);
-    });
-};
-
 const addLog = (topic, data, callback) => {
     const db = getDb();
-    db.appendItem({
-        ...data,
-        topic,
-        type: 'log',
-        time: Date.now().toString()
-    }, (err, data) => {
-        if (topic === 'topic/init') {
-            addComponent(data, callback);
-        };
-        callback(!err);
-    });
+    db.get('logs')
+        .push({
+            ...data,
+            topic,
+            time: Date.now().toString()
+        })
+        .last()
+        .assign({ id: uuid.v4() })
+        .write()
+        .then(post => {
+            if (topic === 'topic/init') {
+                addComponent(data, callback);
+            } else {
+                callback(post);
+            }
+        });
 };
 
 const addComponent = (data, callback) => {
     const db = getDb();
-    db.appendItem({
-        ...data,
-        type: 'component',
-        time: Date.now().toString()
-    }, (err, data) => {
-        callback(!err);
-    });
+    db.get('components')
+        .push({
+            ...data,
+            time: Date.now().toString()
+        })
+        .last()
+        .assign({ id: uuid.v4() })
+        .write()
+        .then(post => callback(post));
 };
 
 const getLogs = callback => {
     const db = getDb();
-    db.find({ type: 'log' }, (err, data) => {
-        if (err || data.length === 0) {
-            callback([]);
-        } else {
-            callback(data.map(log => { 
-                log.key = log._id;
-                delete log.type;
-                delete log._id;
-                return log;
-            }));
-        };
-    });
+    const data = db.get('logs')
+        .value();
+    callback(data.map(log => {
+        log.key = log.id;
+        delete log.id;
+        return log;
+    }));
 };
 
 const getComponents = callback => {
     const db = getDb();
-    db.find({ type: 'component' }, (err, data) => {
-        if (err || data.length === 0) {
-            console.log(err)
-            callback([]);
-        } else {
-            callback(data.map(component => { 
-                component.key = component._id;
-                delete component.type;
-                delete component._id;
-                return component;
-            }));
-        };
-    });
+    const data = db.get('components')
+        .value();
+    callback(data.map(component => {
+        component.key = component.id;
+        delete component.id;
+        return component;
+    }));
 };
 
-const downloadLogs = (callback, specific=['xlsx', 'json', 'csv']) => {
+const downloadLogs = (callback, specific = ['xlsx', 'json', 'csv']) => {
     console.log('\nDownloading logs ...');
     getLogs(async data => {
         if (data.length !== 0 && specific.length !== 0) {
