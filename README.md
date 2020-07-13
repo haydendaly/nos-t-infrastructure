@@ -18,8 +18,8 @@ The only prerequisite is having Docker installed on your system.
 
 To start the simulation, run the following command.
 
-```sh
-docker-compose up --build
+```console
+$ docker-compose up --build
 ```
 
 #### Questions?

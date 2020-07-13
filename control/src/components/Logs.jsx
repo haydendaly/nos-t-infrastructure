@@ -69,7 +69,7 @@ function Logs({ logs }) {
                 className='table-container shadow-reg my-4'
             >
                 <THC isKey dataField='key' hidden></THC>
-                <THC dataField='time' style={headerColumn} thStyle={header} trStyle={row} tdStyle={{ ...text, fontWeight: 13, fontWeight: '400' }} width='120' dataSort>Time</THC>
+                <THC dataField='time' style={headerColumn} thStyle={header} trStyle={row} tdStyle={{ ...text, fontWeight: 12, fontWeight: '400' }} width='120' dataSort>Time</THC>
                 <THC dataField='source' style={headerColumn} thStyle={header} trStyle={row} tdStyle={text} width='170'>Source</THC>
                 <THC dataField='topic' style={headerColumn} thStyle={header} trStyle={row} tdStyle={text} width='160'>Topic</THC>
                 <THC dataField='message'
@@ -87,8 +87,8 @@ function Logs({ logs }) {
 };
 
 const headerColumn = { padding: 100};
-const header = { fontSize: 15, fontWeight: '400', color: '#787878' };
+const header = { fontSize: 14, fontWeight: '400', color: '#787878' };
 const row = { margin: 5, backgroundColor: 'red' };
-const text = { fontSize: 14, fontWeight: '300', color: '#787878' };
+const text = { fontSize: 13, fontWeight: '300', color: '#787878' };
 
 export default Logs;

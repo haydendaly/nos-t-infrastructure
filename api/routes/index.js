@@ -1,15 +1,25 @@
 const express = require('express');
-const router = express.Router();
+const onHeaders = require('on-headers');
 const _ = require('lodash');
 const { getLogs, getComponents } = require('../functions/db');
 const { toggle } = require('../functions/client');
+const router = express.Router();
+
+function scrubETag(res) {
+  onHeaders(res, function () {
+    this.removeHeader('ETag')
+  })
+};
 
 router.get('/logs', (req, res) => {
-  const after = _.get(req.query, 'after');
-  getLogs(data => res.send(data), after);
+  if (_.has(req.query, 'init')) {
+    scrubETag(res);
+  }
+  getLogs(data => res.send(data));
 });
 
 router.get('/components', (req, res) => {
+  scrubETag(res);
   getComponents(data => res.send(data));
 });
 

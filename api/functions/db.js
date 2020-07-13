@@ -66,16 +66,12 @@ const addComponent = (data, callback) => {
     });
 };
 
-const getLogs = (callback, after) => {
-    if (!after) {
-        after = 0;
-    };
+const getLogs = callback => {
     const db = getDb();
     db.find({ type: 'log' }, (err, data) => {
         if (err || data.length === 0) {
             callback([]);
         } else {
-            data = data ? data.slice(after, data.length - 1) : [];
             callback(data.map(log => { 
                 log.key = log._id;
                 delete log.type;
@@ -90,6 +86,7 @@ const getComponents = callback => {
     const db = getDb();
     db.find({ type: 'component' }, (err, data) => {
         if (err || data.length === 0) {
+            console.log(err)
             callback([]);
         } else {
             callback(data.map(component => { 

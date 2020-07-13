@@ -14,9 +14,9 @@ const toggle = (type, properties, callback) => {
     );
 };
 
-const getLogs = (after, callback) => {
+const getLogs = (init, callback) => {
     helper.request(
-        `${url}/logs` + (after > 0 ? `?after=${after}` : ''),
+        `${url}/logs` + (init ? `?init=${init}` : ''),
         'GET',
         response => callback(response),
         null,
@@ -39,12 +39,14 @@ function useControlState() {
     const [logs, setLogs] = useState([]);
     const [components, setComponents] = useState([]);
     const [simulationState, setSimulationState] = useState('Loading');
+    const [init, setInit] = useState(true);
 
     const updateLogs = () => {
         if (key === 'logs') {
-            getLogs(0, data => {
+            getLogs(init, data => {
                 data = logs.concat(data);
                 setLogs(_.uniqWith(data, _.isEqual));
+                setInit(false);
             });
         };
     };

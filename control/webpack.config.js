@@ -53,6 +53,10 @@ module.exports = (env, argv) => {
             }),
             new CleanWebpackPlugin()
         ],
+        devServer: {
+            inline: true,
+            port: 8000
+        },
         resolve: {
             extensions: ['.js', '.jsx'],
         }

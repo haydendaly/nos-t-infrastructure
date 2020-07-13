@@ -11,3 +11,4 @@ These are remaining tasks I have semi-ordered by priority.
     - Running speed
     - End time
     - Timer running ?
+7. Add access to Solace client
