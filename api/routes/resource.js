@@ -30,7 +30,7 @@ router.get('/:filename', (req, res) => {
       const s = fs.createReadStream(resourceURL);
       s.on('open', () => {
         res.set('Content-Type', 'image/png');
-        s.pipe(res)
+        s.pipe(res);
       });
       s.on('error', () => {
         res.set('Content-Type', 'text/plain');

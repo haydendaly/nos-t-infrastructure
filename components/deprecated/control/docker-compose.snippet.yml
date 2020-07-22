@@ -1,0 +1,14 @@
+control:
+    container_name: "control"
+    build:
+      context: ./components/deprecated/control
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - 5000:5000
+    depends_on:
+      - pubsub
+    environment:
+      - BROKER_HOST=testbed.code-lab.org
+      - SLEEP=20
+      - SIMSPEED=1

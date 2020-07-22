@@ -14,6 +14,7 @@ function App(props) {
         setKey,
         logs,
         components,
+        updateLogs,
         update,
         simulationState,
         toggleSimulation
@@ -41,8 +42,8 @@ function App(props) {
                     <Nav.Link style={navText} eventKey="documentation">Documentation</Nav.Link>
                 </NavItem>
             </Nav>
-            {key === 'dashboard' ? <Dashboard components={components} simulationState={simulationState} toggleSimulation={toggleSimulation} /> : false}
-            {key === 'logs' ? <Logs logs={logs} /> : false}
+            {key === 'dashboard' ? <Dashboard components={components} simulationState={simulationState} toggleSimulation={toggleSimulation}/> : false}
+            {key === 'logs' ? <Logs logs={logs} updateLogs={updateLogs}/> : false}
             {key === 'documentation' ? <Documentation /> : false}
         </div>
     );

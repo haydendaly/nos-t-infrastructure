@@ -8,7 +8,7 @@ It consists of a control module, four ground sensors emulating water stream data
 3. The satellite listens to the sensor topic and repeats the data to `topic/satellite`.
 4. The groundstation acts as a subscriber to `topic/satellite` and prints the data to the console.
 
-To interact with the system, go to `localhost:5000` in the browser and you will be presented with a dashboard.
+To interact with the system, go to `localhost` in the browser and you will be presented with a dashboard.
 
 #### Prerequisites
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn as THC } from 'react-bootstrap-table';
 import JSONPretty from 'react-json-pretty';
 const theme = require('../styles/jsonpretty.css');
@@ -31,7 +31,7 @@ function rowClick(row, chosen, setChosen) {
     };
 };
 
-function Logs({ logs }) {
+function Logs({ logs, updateLogs }) {
     const [chosen, setChosen] = useState([]);
 
     let data = logs.map(log => {
@@ -54,53 +54,60 @@ function Logs({ logs }) {
     });
 
     return (
-        <Container>
-            <BootstrapTable
-                data={data}
-                bordered={false}
-                height={data.length > 14 ? '600' : undefined}
-                bodyStyle={{ overflow: 'overlay' }}
-                scrollTop={'Bottom'}
-                options={{ noDataText: 'No logs yet, start the simulation!' }}
-                version='4'
-                hover
-                headerContainerClass='table-header'
-                className='table-container shadow-reg my-4'
-            >
-                <THC isKey dataField='key' hidden></THC>
-                <THC dataField='time' 
-                    thStyle={header}
-                    tdStyle={textSmall}
-                    width='120' 
-                    dataSort
-                    defaultSortOrder='desc'
+        <div>
+            <Container>
+                <Button variant="secondary" onClick={() => updateLogs()}>
+                    Refresh
+                </Button>
+            </Container>
+            <Container>
+                <BootstrapTable
+                    data={data}
+                    bordered={false}
+                    height={data.length > 14 ? '600' : undefined}
+                    bodyStyle={{ overflow: 'overlay' }}
+                    scrollTop={'Bottom'}
+                    options={{ noDataText: 'No logs yet, start the simulation!' }}
+                    version='4'
+                    hover
+                    headerContainerClass='table-header'
+                    className='table-container shadow-reg my-4'
                 >
+                    <THC isKey dataField='key' hidden></THC>
+                    <THC dataField='time'
+                        thStyle={header}
+                        tdStyle={textSmall}
+                        width='120'
+                        dataSort
+                        defaultSortOrder='desc'
+                    >
                         Time
                 </THC>
-                <THC dataField='source' 
-                    thStyle={header}
-                    tdStyle={text}
-                    width='170' 
-                    dataSort
-                >
+                    <THC dataField='source'
+                        thStyle={header}
+                        tdStyle={text}
+                        width='170'
+                        dataSort
+                    >
                         Source
                 </THC>
-                <THC dataField='topic' 
-                    thStyle={header}
-                    tdStyle={text}
-                    width='140' 
-                    dataSort>
+                    <THC dataField='topic'
+                        thStyle={header}
+                        tdStyle={text}
+                        width='140'
+                        dataSort>
                         Topic
                 </THC>
-                <THC dataField='message'
-                    thStyle={header}
-                    tdStyle={text}
-                    dataFormat={(cell, row) => JSONCell(cell, row, chosen, setChosen)}
-                >
-                    Message
+                    <THC dataField='message'
+                        thStyle={header}
+                        tdStyle={text}
+                        dataFormat={(cell, row) => JSONCell(cell, row, chosen, setChosen)}
+                    >
+                        Message
                 </THC>
-            </BootstrapTable>
-        </Container>
+                </BootstrapTable>
+            </Container>
+        </div >
     );
 };
 

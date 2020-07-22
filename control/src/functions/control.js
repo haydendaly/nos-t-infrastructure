@@ -60,7 +60,7 @@ function useControlState() {
             client.onmessage = data => {
                 if (key === 'logs') {
                     const tempLogs = logs;
-                    tempLogs.concat([{
+                    tempLogs = tempLogs.concat([{
                         ...JSON.parse(_.get(data, 'data', '{}')),
                         time: Date.now().toString()
                     }]);
@@ -68,22 +68,19 @@ function useControlState() {
                 }
             };
             client.onclose = () => {
-                setTimeout(() => {
-                    console.log('Websocket Client Closed');
-                    startClient();
-                }, 10000);
+                console.log('Websocket Client Closed');
             };
         };
     };
 
 
     const updateLogs = () => {
-        if (key === 'logs' && init) {
+        if (key === 'logs') {
             getLogs(init, data => {
                 data = logs.concat(data);
                 setLogs(_.uniqWith(data, _.isEqual));
                 setInit(false);
-                startClient();
+                // startClient();
             });
         };
     };
@@ -101,16 +98,19 @@ function useControlState() {
         updateComponents();
     };
 
-    const toggleSimulation = (action, callback, properties = {}) => {
+    const toggleSimulation = (action, properties = {}, callback = () => false) => {
         if (action === 'start' && (simulationState === 'Stopped' || simulationState === 'Ready')) {
-            const simSpeed = _.get(properties, simSpeed, 1);
-            toggle(action, { simSpeed, ...properties }, data => {
+            const startTime = _.get(properties, 'startTime', (new Date).toISOString());
+            const simStartTime = _.get(properties, 'simStartTime', (new Date).toISOString());
+            const timeScalingFactor = _.get(properties, 'timeScalingFactor', 1);
+            toggle(action, { startTime, simStartTime, timeScalingFactor, ...properties }, data => {
                 setSimulationState('Running');
                 callback(data);
             });
         } else if (action === 'stop' && (simulationState === 'Running')) {
+            const stopTime = _.get(properties, 'stopTime', (new Date).toISOString());
             setSimulationState('Stopped');
-            toggle(action, properties, data => callback(data));
+            toggle(action, { stopTime, ...properties }, data => callback(data));
         };
     };
 
@@ -119,6 +119,7 @@ function useControlState() {
         setKey,
         logs,
         components,
+        updateLogs,
         update,
         simulationState,
         toggleSimulation

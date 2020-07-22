@@ -55,12 +55,12 @@ process.on('SIGINT', () => {
 });
 
 // Establish Websocket Tunneling
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-wss.on('connection', ws => wsHandler('testbed.code-lab.org', 1883, ws));
+// const server = http.createServer(app);
+// const wss = new WebSocket.Server({ server });
+// wss.on('connection', ws => wsHandler('testbed.code-lab.org', 1883, ws));
 
-server.listen(2000, () => {
-  console.log('Websocket initialized');
-});
+// server.listen(2000, () => {
+//   console.log('Websocket initialized');
+// });
 
 module.exports = app;

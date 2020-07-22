@@ -4,7 +4,7 @@ This is basic documentation specifying the component communication in greater de
 
 ### System Architecture
 
-The structure of this sounds complicated at first because implementation of tools like Docker, Nginx, Flask, Solace, etc. but is relatively straight forward in terms of core functionality. Provided below is a rough diagram showing the communication between components.
+The structure of this sounds complicated at first because implementation of tools like Docker, Nginx, React, Express, Solace, MQTT, etc. but is relatively straight forward in terms of core functionality. Provided below is a rough diagram showing the communication between components.
 
 ![Architecture Diagram](./doc_files/arch.png)
 
@@ -14,11 +14,19 @@ There are four primary components in the system as pictured above. The data is b
 
 This acts as a user interface for the simulation and simply sends messages via MQTT over `topic/control` to the rest of the components within the system. This also listens to messages on any topic of the format `topic/*` and provides a log of them which can be accessed on the UI.
 
-The UI through ported to a Flask server and then a reverse proxy with Nginx which allows for the user interface on http://localhost:5000 to interact with the entire system.
+The UI is React compiled through Webpack and then a reverse proxy with Nginx which allows for the user interface on `http://localhost` to interact with the entire system.
+
+#### API
+
+This acts as a developer interface for the simulation and the Control just provides an interface for its functionality. It is in the form of a REST API built upon Express. A mapping of the API's endpoints and data schema is in the process of be written but can be accessed through `http://localhost/api`.
+
+The API provides logging for the entire simulation and will export a `CSV, XLSX, and JSON` file of all logs upon shutting down. This will be availible in the logs folder (Only internal as of now).
+
+The API also has a Websocket interface for subscribing to the data stream of communication availible on `http://localhost/ws` (Only availible internally as of now).
 
 #### Sensor
 
-This is a relatively simple model of a ground sensor which takes the input of which dataset to operate off of from the four options provided below. There is only one model for sensors and it is just reused varying the dataset and location. The particularly model uses streamflow data from the USGS website in the form of a CSV. It outputs its data out according to the simulation speed as specified by the control.
+This is a relatively simple model of a ground sensor which takes the input of which dataset to operate off of from the four options provided below. There is only one model for sensors and it is just reused varying the dataset and location. The particularly model uses streamflow data from the USGS website in the form of a `CSV` file. It outputs its data out according to the simulation speed as specified by the control.
 
 #### Satellite
 
@@ -42,12 +50,14 @@ The schema for communication between the components is loosely based off the Sen
     "description" : "Starts and stops the simulation. Logs all communications over 'topic/*'.",
     "properties" : {
         "type" : "start",
-        "simSpeed": 2
+        "startTime": "2020-07-22T09:42:10+0000",
+        "simStartTime" : "2020-07-22T06:42:10+0000",
+        "timeScalingFactor": 30
     }
 }
 ```
 
-This example is for the start message and to stop the system, a similar message with the `type: "stop"` and no `simSpeed` field will stop the system.
+This example is for the start message and to stop the system, a similar message with the `type: "stop"` and just a `stopTime` field in ISO 8601 format will stop the system.
 
 #### Sensor
 
