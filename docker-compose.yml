@@ -49,12 +49,11 @@ services:
       - 8000:8000
     environment: 
       - API_HOST=api
-    # command: tail -f /dev/null && echo "docker exec control it /bin/bash"
 
   nginx:
     image: nginx:1.13.7
-    # logging:
-    #   driver: none
+    logging:
+      driver: none
     ports:
       - '80:80'
     depends_on:
