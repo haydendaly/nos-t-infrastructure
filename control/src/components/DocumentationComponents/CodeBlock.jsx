@@ -17,7 +17,7 @@ class CodeBlock extends PureComponent {
     const { language, value } = this.props;
     return (
       <SyntaxHighlighter language={language} style={style}>
-        {value}
+        {value.trim()}
       </SyntaxHighlighter>
     );
   }

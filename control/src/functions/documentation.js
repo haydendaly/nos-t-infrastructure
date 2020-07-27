@@ -16,7 +16,7 @@ const getResource = (filename, callback) => {
 };
 
 function useDocumentation() {
-    const [terms, setTerms] = useState('`Error`');
+    const [terms, setTerms] = useState('`Loading...`');
     const [page, setPage] = useState('DOCUMENTATION');
 
     const updateTerms = () => {

@@ -123,9 +123,9 @@ if __name__ == "__main__":
     FIELD_OF_VIEW = int(str(vars(args)['field_of_view']))
     START = False
 
-    init(args)
     # Waiting for PubSub container
     time.sleep(int(vars(args)['sleep']))
+    init(args)
 
     # Conencting to Solace Client
     client = mqtt.Client()

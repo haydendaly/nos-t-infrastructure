@@ -39,9 +39,6 @@ def on_message(mqttc, obj, msg):
 
 def control(ip, port, sleep, dataset, lat, lon):
     """Conencts to Solace client and prepares dataframe for simulation"""
-    # Waiting for Pubsub container to start
-    time.sleep(int(sleep))
-
     # Preparing dataframe for simulation
     if dataset not in SUPPORTED_DATASETS:
         dataset = "arroyo"
@@ -126,5 +123,6 @@ if __name__ == "__main__":
     START = False
     simSpeed = 1
     args, leftovers = parser.parse_known_args()
+    time.sleep(int(vars(args)['sleep']))
     init(args)
     control(**vars(args))

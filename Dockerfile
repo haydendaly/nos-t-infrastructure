@@ -12,4 +12,5 @@ COPY doc_files doc_files
 WORKDIR /app/api
 RUN npm install
 EXPOSE 3000
+ENV BROKER_HOST=$BROKER_HOST BROKER_PORT=$BROKER_PORT
 CMD [ "npm", "start" ]

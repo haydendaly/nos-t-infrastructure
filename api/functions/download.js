@@ -1,6 +1,7 @@
 const json2xlsx = require('node-json-xlsx');
 const fs = require('fs');
 const _ = require('lodash');
+const assert = require('assert');
 
 let _date;
 
@@ -72,5 +73,6 @@ const download = async (data, specific) => {
 
 module.exports = {
     initDate,
+    getDate,
     download
 };

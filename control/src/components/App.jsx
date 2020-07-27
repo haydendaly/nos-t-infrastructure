@@ -32,26 +32,26 @@ function App(props) {
                 className="mx-4 navbar-custom"
                 variant="tabs"
             >
-                <NavItem style={nav} className="navitem">
-                    <Nav.Link style={navText} eventKey="dashboard">Dashboard</Nav.Link>
+                <NavItem>
+                    <Nav.Link eventKey="dashboard">Dashboard</Nav.Link>
+                    <div style={key === "dashboard" ? selected : { height: 2.5 }} />
                 </NavItem>
-                <NavItem style={nav} className="navitem">
-                    <Nav.Link style={navText} eventKey="logs">Logs</Nav.Link>
+                <NavItem>
+                    <Nav.Link eventKey="logs">Logs</Nav.Link>
+                    <div style={key === "logs" ? selected : { height: 2.5 }} />
                 </NavItem>
-                <NavItem style={nav} className="navitem">
-                    <Nav.Link style={navText} eventKey="documentation">Documentation</Nav.Link>
+                <NavItem>
+                    <Nav.Link eventKey="documentation">Documentation</Nav.Link>
+                    <div style={key === "documentation" ? selected : { height: 2.5 }} />
                 </NavItem>
             </Nav>
             {key === 'dashboard' ? <Dashboard components={components} simulationState={simulationState} toggleSimulation={toggleSimulation}/> : false}
-            {key === 'logs' ? <Logs logs={logs} updateLogs={updateLogs}/> : false}
+            {key === 'logs' ? <Logs logs={logs} updateLogs={updateLogs} /> : false}
             {key === 'documentation' ? <Documentation /> : false}
         </div>
     );
 };
 
-const nav = {};
-const navText = {
-    color: '#496381'
-}  
+const selected = { backgroundColor: '#4f8de9', borderTopLeftRadius: 2, borderTopRightRadius: 2, height: 2.5 };
 
 export default App;

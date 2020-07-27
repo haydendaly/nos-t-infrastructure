@@ -37,7 +37,6 @@ def on_message(client, obj, msg):
 
 def control(ip, port, sleep):
     """Sets up MQTT subscription for simulation"""
-    time.sleep(int(sleep))
     client = mqtt.Client()
     client.on_message = on_message
     client.connect(ip, int(port), 60)
@@ -70,6 +69,7 @@ if __name__ == "__main__":
     parser.add_argument("--sleep", default=argparse.SUPPRESS,
                         help="Sleep time before start")
     args, leftovers = parser.parse_known_args()
+    time.sleep(int(vars(args)['sleep']))
     init(args)
     
     control(**vars(args))

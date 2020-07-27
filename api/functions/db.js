@@ -94,9 +94,9 @@ const downloadLogs = (callback, specific = ['xlsx', 'json', 'csv']) => {
     console.log('\nDownloading logs ...');
     getLogs(async data => {
         if (data.length !== 0 && specific.length !== 0) {
-            download(data, specific).then(callback);
+            download(data, specific).then(() => callback(true));
         } else {
-            callback();
+            callback(false);
         };
     });
 };

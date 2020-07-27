@@ -52,12 +52,13 @@ The schema for communication between the components is loosely based off the Sen
         "type" : "start",
         "startTime": "2020-07-22T09:42:10+0000",
         "simStartTime" : "2020-07-22T06:42:10+0000",
+        "stopTime" : "2020-07-22T06:42:10+0000",
         "timeScalingFactor": 30
     }
 }
 ```
 
-This example is for the start message and to stop the system, a similar message with the `type: "stop"` and just a `stopTime` field in ISO 8601 format will stop the system.
+This example is for the start message and to stop the system, a similar message with the `type: "stop"` and just a `stopTime` field in ISO 8601 format will stop the system. If fields aren't provided in the control dashboard, the `startTime`/`simStartTime` will be defaulted to 30 seconds in the future, `timeScaling` will be defaulted to 30, and `stopTime` will not be provided.
 
 #### Sensor
 

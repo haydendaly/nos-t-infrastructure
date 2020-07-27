@@ -38,6 +38,7 @@ router.get('/:filename', (req, res) => {
       })
     };
   } else {
+    res.set('Content-Type', 'text/plain');
     res.status(404).end({ message: `No resource named ${filename}` });
   };
 });

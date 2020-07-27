@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
-import { Container, Button, InputGroup, FormControl } from 'react-bootstrap';
+import { Container, InputGroup, FormControl } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn as THC } from 'react-bootstrap-table';
+import Button from './Global/Button';
 import '../styles/style.scss';
 
 function Dashboard({ components, simulationState, toggleSimulation }) {
@@ -24,58 +25,76 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
 
     return (
         <div>
-            <Container
-                style={{ overflow: 'hidden' }}
-            >
+            <Container>
                 <div className="component-table shadow-reg mt-4 content doc-container">
-                    <InputGroup className="m-3" style={{ width: '97%' }}>
-                        <InputGroup.Prepend>
-                            <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Initial Wallclock Time</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl
-                            placeholder="ISO 8601"
-                            onChange={event => startTime.current = event.target.value !== '' ? event.target.value : null}
-                        />
-                        <InputGroup.Prepend>
-                            <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Initial Sim. Time</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl
-                            placeholder="ISO 8601"
-                            onChange={event => simStartTime = event.target.value !== '' ? event.target.value : null}
-                        />
-                        <InputGroup.Prepend>
-                            <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Time Scaling Factor</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl
-                            placeholder="Floating-point number"
-                            onChange={event => timeScalingFactor.current = event.target.value !== '' ? event.target.value : null}
-                        />
-                        <Button variant="success" className="ml-3" active={simulationState === 'Running'} onClick={() => {
-                            toggleSimulation('start', {
-                                startTime: startTime.current, 
-                                simStartTime: simStartTime.current, 
-                                timeScalingFactor: timeScalingFactor.current
-                            }, data => console.log(data));
-                        }}>
-                            Start
-                        </Button>
-                    </InputGroup>
-                    <InputGroup className="m-3" style={{ width: '97%' }}>
-                        <InputGroup.Prepend>
-                            <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Stop Wallclock Time</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl
-                            placeholder="ISO 8601"
-                            onChange={event => stopTime.current = event.target.value !== '' ? event.target.value : null}
-                        />
-                        <Button variant="danger" className="ml-3" active={simulationState === 'Ready' || simulationState === 'Stopped'} onClick={() => {
-                            toggleSimulation('stop', {
-                                stopTime: stopTime.current
-                            }, data => console.log(data));
-                        }}>
-                            Stop
-                        </Button>
-                    </InputGroup>
+                    {simulationState === 'Ready' || simulationState === 'Stopped' ? (
+                        <div>
+                            <InputGroup className="m-3" style={{ width: '97%' }}>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Initial Wallclock Time</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <FormControl
+                                    placeholder="ISO 8601"
+                                    style={{ fontSize: 14, height: 40 }}
+                                    onChange={event => startTime.current = event.target.value !== '' ? event.target.value : null}
+                                />
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Initial Sim. Time</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <FormControl
+                                    placeholder="ISO 8601"
+                                    style={{ fontSize: 14, height: 40 }}
+                                    onChange={event => simStartTime = event.target.value !== '' ? event.target.value : null}
+                                />
+                            </InputGroup>
+                            <InputGroup className="m-3" style={{ width: '97%' }}>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Stop Wallclock Time</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <FormControl
+                                    placeholder="ISO 8601"
+                                    style={{ fontSize: 14, height: 40 }}
+                                    onChange={event => stopTime.current = event.target.value !== '' ? event.target.value : null}
+                                />
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Time Scaling Factor</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <FormControl
+                                    placeholder="Floating-point number"
+                                    style={{ fontSize: 14, height: 40 }}
+                                    onChange={event => timeScalingFactor.current = event.target.value !== '' ? event.target.value : null}
+                                />
+                                <Button variant="success" text="Start" func={() => {
+                                    toggleSimulation('start', {
+                                        startTime: startTime.current,
+                                        simStartTime: simStartTime.current,
+                                        timeScalingFactor: timeScalingFactor.current,
+                                        stopTime: stopTime.current ? stopTime.current : undefined
+                                    }, data => console.log(data));
+                                }} />
+
+                            </InputGroup>
+                        </div>
+                    ) : (
+                            <InputGroup className="m-3" style={{ width: '97%' }}>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Stop Wallclock Time</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <FormControl
+                                    placeholder="ISO 8601"
+                                    style={{ fontSize: 14, height: 40 }}
+                                    onChange={event => stopTime.current = event.target.value !== '' ? event.target.value : null}
+                                />
+                                <Button variant="danger" text="Stop" func={() => {
+                                    toggleSimulation('stop', {
+                                        stopTime: stopTime.current
+                                    }, data => {
+                                        console.log(data);
+                                        stopTime.current = null;
+                                    });
+                                }} />
+                            </InputGroup>
+                        )}
                 </div>
             </Container>
             <Container>

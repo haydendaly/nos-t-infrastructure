@@ -4,10 +4,10 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import helper from './helper';
 
 const api_host = process.env.API_HOST ? process.env.API_HOST : '127.0.0.1';
-const api_port = process.env.API_PORT ? process.env.API_URL : 3000;
-const api_ws_port = process.env.API_PORT ? process.env.API_URL : 2000;
-const host = process.env.HOST_URL ? process.env.HOST_URL : 'testbed.code-lab.org';
-const port = process.env.HOST_PORT ? process.env.HOST_PORT : 1883;
+const api_port = process.env.API_PORT ? process.env.API_PORT : 3000;
+const api_ws_port = process.env.API_WS_PORT ? process.env.API_WS_URL : 2000;
+const host = process.env.BROKER_HOST ? process.env.BROKER_HOST : 'testbed.code-lab.org';
+const port = process.env.BROKER_PORT ? process.env.BROKER_PORT : 1883;
 const url = `http://${api_host}:${api_port}`;
 
 
@@ -47,31 +47,32 @@ function useControlState() {
     const [components, setComponents] = useState([]);
     const [simulationState, setSimulationState] = useState('Ready');
     const [init, setInit] = useState(true);
-    const [clientState, setClientState] = useState(false);
+    // const [clientState, setClientState] = useState(false);
 
-    const client = new W3CWebSocket(`ws://${api_host}:${api_ws_port}`);
+    // const client = new W3CWebSocket(`ws://${host}:${api_ws_port}`);
 
-    const startClient = () => {
-        if (!clientState && key === 'logs') {
-            setClientState(true);
-            client.onopen = () => {
-                console.log('WebSocket Client Connected');
-            };
-            client.onmessage = data => {
-                if (key === 'logs') {
-                    const tempLogs = logs;
-                    tempLogs = tempLogs.concat([{
-                        ...JSON.parse(_.get(data, 'data', '{}')),
-                        time: Date.now().toString()
-                    }]);
-                    setLogs(_.uniqWith(tempLogs, _.isEqual));
-                }
-            };
-            client.onclose = () => {
-                console.log('Websocket Client Closed');
-            };
-        };
-    };
+    // const startClient = () => {
+    //     if (!clientState && key === 'logs') {
+    //         setClientState(true);
+    //         client.onopen = () => {
+    //             console.log('WebSocket Client Connected');
+    //         };
+            // client.onmessage = data => {
+            //     if (key === 'logs') {
+            //         console.log(JSON.parse(_.get(data, 'data', '{}')));
+            //         const tempLogs = logs;
+            //         tempLogs = tempLogs.concat([{
+            //             ...JSON.parse(_.get(data, 'data', '{}')),
+            //             time: Date.now().toString()
+            //         }]);
+            //         setLogs(_.uniqWith(tempLogs, _.isEqual));
+            //     }
+            // };
+    //         client.onclose = () => {
+    //             console.log('Websocket Client Closed');
+    //         };
+    //     };
+    // };
 
 
     const updateLogs = () => {
@@ -99,10 +100,20 @@ function useControlState() {
     };
 
     const toggleSimulation = (action, properties = {}, callback = () => false) => {
+        let d;
+        d = new Date();
+        d.setSeconds(d.getSeconds() + 30);
+        const utc = d.toISOString();
+
         if (action === 'start' && (simulationState === 'Stopped' || simulationState === 'Ready')) {
-            const startTime = _.get(properties, 'startTime', (new Date).toISOString());
-            const simStartTime = _.get(properties, 'simStartTime', (new Date).toISOString());
-            const timeScalingFactor = _.get(properties, 'timeScalingFactor', 1);
+            let startTime = _.get(properties, 'startTime', utc);
+            let simStartTime = _.get(properties, 'simStartTime', utc);
+            let timeScalingFactor = _.get(properties, 'timeScalingFactor', 30);
+
+            startTime = startTime !== null ? startTime : utc;
+            simStartTime = simStartTime !== null ? simStartTime : utc;
+            timeScalingFactor = timeScalingFactor !== null ? timeScalingFactor : 30;
+
             toggle(action, { startTime, simStartTime, timeScalingFactor, ...properties }, data => {
                 setSimulationState('Running');
                 callback(data);

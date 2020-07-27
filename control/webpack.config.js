@@ -1,11 +1,13 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 //spit out seperate file for css -> multiple entry / output points
 
 module.exports = (env, argv) => {
     const devtool = argv.mode === "development" ? "eval-source-map" : "nosources-source-map"
+
     return {
         entry: {
             scripts: './src/index.js',
@@ -49,9 +51,18 @@ module.exports = (env, argv) => {
         },
         plugins: [
             new HtmlWebpackPlugin({
-                template: './src/index.html'
+                template: './src/index.html',
+                favicon: "./src/static/favicon.png"
             }),
-            new CleanWebpackPlugin()
+            new CleanWebpackPlugin(),
+            new webpack.EnvironmentPlugin({
+                API_HOST: process.env.API_HOST,
+                API_PORT: process.env.API_PORT,
+                API_WS_PORT: process.env.API_WS_PORT,
+                BROKER_HOST: process.env.BROKER_HOST,
+                BROKER_PORT: process.env.BROKER_PORT,
+                SLEEP: process.env.SLEEP
+            })
         ],
         devServer: {
             inline: true,
