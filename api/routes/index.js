@@ -24,7 +24,7 @@ router.get('/components', (req, res) => {
 });
 
 router.post('/start', (req, res) => {
-  toggle('start', { simSpeed: 1, ...req.body }, data => res.send(data));
+  toggle('start', { ...req.body }, data => res.send(data));
 });
 
 router.post('/stop', (req, res) => {

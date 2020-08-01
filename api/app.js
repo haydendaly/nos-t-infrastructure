@@ -19,6 +19,8 @@ const app = express();
 const host = process.env.BROKER_HOST ? process.env.BROKER_HOST : 'testbed.code-lab.org';
 const port = process.env.BROKER_PORT ? process.env.BROKER_PORT : 1883;
 
+console.log(host, port)
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

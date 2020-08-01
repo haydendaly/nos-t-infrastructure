@@ -105,23 +105,26 @@ function useControlState() {
         d.setSeconds(d.getSeconds() + 30);
         const utc = d.toISOString();
 
+        d.setSeconds(d.getSeconds() + 36000);
+        const utcEnd = d.toISOString();
+
         if (action === 'start' && (simulationState === 'Stopped' || simulationState === 'Ready')) {
             let startTime = _.get(properties, 'startTime', utc);
             let simStartTime = _.get(properties, 'simStartTime', utc);
-            let timeScalingFactor = _.get(properties, 'timeScalingFactor', 30);
+            let simStopTime = _.get(properties, 'simStopTime', utcEnd);
+            let timeScalingFactor = _.get(properties, 'timeScalingFactor', 600);
 
             startTime = startTime !== null ? startTime : utc;
             simStartTime = simStartTime !== null ? simStartTime : utc;
-            timeScalingFactor = timeScalingFactor !== null ? timeScalingFactor : 30;
-
-            toggle(action, { startTime, simStartTime, timeScalingFactor, ...properties }, data => {
+            timeScalingFactor = timeScalingFactor !== null ? timeScalingFactor : 600;
+            toggle(action, { ...properties, startTime, simStartTime, timeScalingFactor, simStopTime }, data => {
                 setSimulationState('Running');
                 callback(data);
             });
         } else if (action === 'stop' && (simulationState === 'Running')) {
-            const stopTime = _.get(properties, 'stopTime', (new Date).toISOString());
+            const simStopTime = _.get(properties, 'simStopTime', (new Date).toISOString());
             setSimulationState('Stopped');
-            toggle(action, { stopTime, ...properties }, data => callback(data));
+            toggle(action, { ...properties, simStopTime }, data => callback(data));
         };
     };
 

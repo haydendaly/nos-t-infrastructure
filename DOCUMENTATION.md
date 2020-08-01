@@ -48,17 +48,17 @@ The schema for communication between the components is loosely based off the Sen
 {
     "name" : "control",
     "description" : "Starts and stops the simulation. Logs all communications over 'topic/*'.",
-    "properties" : {
-        "type" : "start",
-        "startTime": "2020-07-22T09:42:10+0000",
-        "simStartTime" : "2020-07-22T06:42:10+0000",
-        "stopTime" : "2020-07-22T06:42:10+0000",
-        "timeScalingFactor": 30
+    "properties" : 	{
+        "type": "start",
+        "startTime": "2020-08-01T21:06:48.050Z",
+        "simStartTime": "2020-08-01T21:06:48.050Z",
+        "timeScalingFactor": 600,
+        "simStopTime": "2020-08-02T07:06:48.050Z"
     }
 }
 ```
 
-This example is for the start message and to stop the system, a similar message with the `type: "stop"` and just a `stopTime` field in ISO 8601 format will stop the system. If fields aren't provided in the control dashboard, the `startTime`/`simStartTime` will be defaulted to 30 seconds in the future, `timeScaling` will be defaulted to 30, and `stopTime` will not be provided.
+This example is for the start message and to stop the system, a similar message with the `type: "stop"` and just a `stopTime` field in ISO 8601 format will stop the system. If fields aren't provided in the control dashboard, the `startTime`/`simStartTime` will be defaulted to 30 seconds in the future, `simStopTime` will be defaulted to 36000 seconds in the future, ,and `timeScaling` will be defaulted to 600.
 
 #### Sensor
 

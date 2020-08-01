@@ -8,7 +8,7 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
     const startTime = useRef(null);
     const simStartTime = useRef(null);
     const timeScalingFactor = useRef(null);
-    const stopTime = useRef(null);
+    const simStopTime = useRef(null);
 
     let data = components.map(component => {
         let subscriptions = _.get(component.properties, 'subscriptions');
@@ -49,12 +49,12 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
                             </InputGroup>
                             <InputGroup className="m-3" style={{ width: '97%' }}>
                                 <InputGroup.Prepend>
-                                    <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Stop Wallclock Time</InputGroup.Text>
+                                    <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Stop Sim. Time</InputGroup.Text>
                                 </InputGroup.Prepend>
                                 <FormControl
                                     placeholder="ISO 8601"
                                     style={{ fontSize: 14, height: 40 }}
-                                    onChange={event => stopTime.current = event.target.value !== '' ? event.target.value : null}
+                                    onChange={event => simStopTime.current = event.target.value !== '' ? event.target.value : null}
                                 />
                                 <InputGroup.Prepend>
                                     <InputGroup.Text style={{ ...header, backgroundColor: '#f7f7f7' }}>Time Scaling Factor</InputGroup.Text>
@@ -69,7 +69,7 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
                                         startTime: startTime.current,
                                         simStartTime: simStartTime.current,
                                         timeScalingFactor: timeScalingFactor.current,
-                                        stopTime: stopTime.current ? stopTime.current : undefined
+                                        simStopTime: simStopTime.current ? simStopTime.current : undefined
                                     }, data => console.log(data));
                                 }} />
 
@@ -83,14 +83,14 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
                                 <FormControl
                                     placeholder="ISO 8601"
                                     style={{ fontSize: 14, height: 40 }}
-                                    onChange={event => stopTime.current = event.target.value !== '' ? event.target.value : null}
+                                    onChange={event => simStopTime.current = event.target.value !== '' ? event.target.value : null}
                                 />
                                 <Button variant="danger" text="Stop" func={() => {
                                     toggleSimulation('stop', {
-                                        stopTime: stopTime.current
+                                        simStopTime: simStopTime.current
                                     }, data => {
                                         console.log(data);
-                                        stopTime.current = null;
+                                        simStopTime.current = null;
                                     });
                                 }} />
                             </InputGroup>
