@@ -28,8 +28,8 @@ def on_message(mqttc, obj, msg):
     if msg.topic == "topic/control":
         if json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "start":
             print("Sensor Started")
-            global simSpeed
-            simSpeed = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]["simSpeed"])
+            global timeScalingFactor
+            timeScalingFactor = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]["timeScalingFactor"])
             START = True
 
         elif json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "stop":
@@ -63,8 +63,7 @@ def control(ip, port, sleep, dataset, lat, lon):
             for index, row in data.iterrows():
                 if not START:
                     break
-                global simSpeed
-                time.sleep(simSpeed)
+                global timeScalingFactor
                 message = {
                     "name": "sensor_" + vars(args)['dataset'],
                     "description" : "Model simulating streamflow data for a USGS sensor in " +
@@ -121,7 +120,7 @@ if __name__ == "__main__":
                         help="Longitude of sensor")
 
     START = False
-    simSpeed = 1
+    timeScalingFactor = 1
     args, leftovers = parser.parse_known_args()
     time.sleep(int(vars(args)['sleep']))
     init(args)

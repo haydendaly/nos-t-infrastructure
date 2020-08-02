@@ -3,10 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
-//spit out seperate file for css -> multiple entry / output points
-
 module.exports = (env, argv) => {
-    const devtool = argv.mode === "development" ? "eval-source-map" : "nosources-source-map"
+    const devtool = argv.mode === "production" ? "eval-source-map" : "inline-source-map"
 
     return {
         entry: {
@@ -43,10 +41,6 @@ module.exports = (env, argv) => {
                         'sass-loader',
                     ],
                 },
-                // {
-                //     test: /\.md$/i,
-                //     use: 'raw-loader'
-                // }
             ]
         },
         plugins: [
@@ -58,9 +52,8 @@ module.exports = (env, argv) => {
             new webpack.EnvironmentPlugin({
                 API_HOST: process.env.API_HOST,
                 API_PORT: process.env.API_PORT,
-                API_WS_PORT: process.env.API_WS_PORT,
-                BROKER_HOST: process.env.BROKER_HOST,
-                BROKER_PORT: process.env.BROKER_PORT,
+                WS_HOST: process.env.WS_HOST,
+                WS_PORT: process.env.WS_PORT,
                 SLEEP: process.env.SLEEP
             })
         ],

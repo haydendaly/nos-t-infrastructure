@@ -89,7 +89,6 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
                                     toggleSimulation('stop', {
                                         simStopTime: simStopTime.current
                                     }, data => {
-                                        console.log(data);
                                         simStopTime.current = null;
                                     });
                                 }} />

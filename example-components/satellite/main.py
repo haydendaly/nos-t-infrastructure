@@ -22,8 +22,8 @@ def on_message(mqttc, obj, msg):
     if msg.topic == "topic/control":
         if json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "start":
             print("Satellite Started")
-            global simSpeed
-            simSpeed = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]['simSpeed'])
+            global timeScalingFactor
+            timeScalingFactor = int(json.loads(str(msg.payload.decode("utf-8")))["properties"]['timeScalingFactor'])
             START = True
 
         elif json.loads(msg.payload.decode("utf-8"))["properties"]["type"] == "stop":
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     args, leftovers = parser.parse_known_args()
 
     # Assigning global values subject to change
-    simSpeed = 1
+    timeScalingFactor = 1
     ORBIT = str(vars(args)['orbit'])
     if ORBIT not in ORBITS:
         ORBIT = "polar"
@@ -134,9 +134,9 @@ if __name__ == "__main__":
     client.subscribe("topic/#", 0)
     client.loop_start()
 
-    # Starting loop to move the satellite according to simSpeed from control
+    # Starting loop to move the satellite according to timeScalingFactor from control
     # !!! Need to add global variable waiting for simulation to start
     while True:
         if START:
             move()
-            time.sleep(simSpeed)
+            time.sleep(timeScalingFactor)

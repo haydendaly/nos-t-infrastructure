@@ -1,0 +1,9 @@
+FROM node
+
+COPY . .
+RUN npm install
+EXPOSE 2000
+ARG BROKER_HOST=testbed.code-lab.org
+ARG BROKER_PORT=1883
+ENV BROKER_HOST=$BROKER_HOST BROKER_PORT=$BROKER_PORT
+CMD [ "npm", "start" ]

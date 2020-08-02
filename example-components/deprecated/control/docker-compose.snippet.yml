@@ -11,4 +11,4 @@ control:
     environment:
       - BROKER_HOST=testbed.code-lab.org
       - SLEEP=20
-      - SIMSPEED=1
+      - timeScalingFactor=1

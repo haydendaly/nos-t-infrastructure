@@ -2,7 +2,7 @@
 
 This repo contains an initial infrastructure for orchestrating simulation components.
 
-It consists of a control module, four ground sensors emulating water stream data in the Los Angeles area, a satellite, and a ground station.
+There is an example simulation which consists of the following components.
 1. The control module starts the simulation by publishing a message to all the other components to start up under the `topic/control`.
 2. The ground sensors act as publishers using data from CSV files taken from the USGS website publishing data to `topic/sensors` on an interval as determined by the control module.
 3. The satellite listens to the sensor topic and repeats the data to `topic/satellite`.
@@ -16,10 +16,22 @@ The only prerequisite is having Docker installed on your system.
 
 #### Usage
 
+To start the example simulation, run the following command.
+
+```console
+$ docker-compose -f docker-compose.example.yml up
+```
+
 To start the simulation, run the following command.
 
 ```console
-$ docker-compose up --build
+$ docker-compose up
+```
+
+After running, it is good practice to run the following command to negate cached data.
+
+```console
+$ docker-compose down
 ```
 
 #### Questions?

@@ -1,4 +1,5 @@
 components/depcreated//groundstation_node/node_modules/**/*
 control/node_modules/**/*
 api/node_modules/**/*
+mqtt_ws_tunnel/node_modules/**/*
 logs/*

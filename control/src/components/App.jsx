@@ -8,7 +8,7 @@ import Documentation from './Documentation';
 import control from '../functions/control';
 import '../styles/style.scss';
 
-function App(props) {
+function App() {
     const {
         key,
         setKey,

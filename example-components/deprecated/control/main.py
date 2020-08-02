@@ -41,7 +41,7 @@ def start():
         "description" : "Starts and stops the simulation. Logs all communications over 'topic/*'.",
         "properties" : {
             "type" : "start",
-            "simSpeed": str(simSpeed)
+            "timeScalingFactor": str(timeScalingFactor)
         }
     }
     infot = client.publish("topic/control", json.dumps(message))
@@ -114,7 +114,7 @@ if __name__ == "__main__":
                         help="IP of (Docker) machine")
     parser.add_argument("--port", default=argparse.SUPPRESS,
                         help="Port of (Docker) machine")
-    parser.add_argument("--simSpeed", default=argparse.SUPPRESS,
+    parser.add_argument("--timeScalingFactor", default=argparse.SUPPRESS,
                         help="Speed of simulation")
     parser.add_argument("--sleep", default=argparse.SUPPRESS,
                         help="Sleep before starting simulation")
@@ -128,7 +128,7 @@ if __name__ == "__main__":
     # Connecting to the Solace client
     client = mqtt.Client()
     client.connect(inputs['ip'], int(inputs['port']))
-    simSpeed = str(inputs['simSpeed'])
+    timeScalingFactor = str(inputs['timeScalingFactor'])
     client.on_message = on_message
     client.subscribe("topic/#", 0)
     client.loop_start()
