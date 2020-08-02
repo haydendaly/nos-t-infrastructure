@@ -11,7 +11,7 @@ function Logs({ logs, updateLogs }) {
     const [showing, setShowing] = useState(50);
     const [keys, setKeys] = useState([]);
 
-    let cleanLogs = _.uniqBy(logs, log => log.topic + log.name + log.time);
+    let cleanLogs = _.uniqBy(logs, log => log.key);
     let data = cleanLogs.map(log => {
         let time = new Date(parseInt(log.time)).toLocaleTimeString();
 

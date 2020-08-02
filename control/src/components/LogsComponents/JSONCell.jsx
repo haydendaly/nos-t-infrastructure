@@ -11,14 +11,14 @@ class JSONCell extends Component {
         this.state = {
             data,
             keys: props.keys,
-            open: false
+            open: this.props.keys.includes(this.props.cell.key)
         }
     }
 
     componentDidMount() {
         this.setState({ 
             keys: this.props.keys,
-            open: this.props.keys.includes(this.props.key)
+            open: this.props.keys.includes(this.props.cell.key)
         });
     }
 
