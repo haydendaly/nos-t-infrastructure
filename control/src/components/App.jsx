@@ -13,6 +13,7 @@ function App() {
         key,
         setKey,
         logs,
+        wsLogs,
         components,
         updateLogs,
         update,
@@ -46,7 +47,7 @@ function App() {
                 </NavItem>
             </Nav>
             {key === 'dashboard' ? <Dashboard components={components} simulationState={simulationState} toggleSimulation={toggleSimulation}/> : false}
-            {key === 'logs' ? <Logs logs={logs} updateLogs={updateLogs} /> : false}
+            {key === 'logs' ? <Logs logs={logs} wsLogs={wsLogs} updateLogs={updateLogs} /> : false}
             {key === 'documentation' ? <Documentation /> : false}
         </div>
     );

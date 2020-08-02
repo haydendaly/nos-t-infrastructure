@@ -29,6 +29,8 @@ services:
     build: .
     expose:
       - 3000
+    logging:
+      driver: none
     ports:
       - 3000:3000
     # depends_on:
@@ -164,7 +166,7 @@ services:
       context: ./example-components/satellite
       dockerfile: Dockerfile
     tty: true
-    restart: always
+    restart: always 
     depends_on:
       # - pubsub
       - api

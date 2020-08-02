@@ -7,11 +7,11 @@ import JSONCell from './LogsComponents/JSONCell';
 import Button from './Global/Button';
 import '../styles/style.scss';
 
-function Logs({ logs, updateLogs }) {
+function Logs({ logs, wsLogs, updateLogs }) {
     const [showing, setShowing] = useState(50);
     const [keys, setKeys] = useState([]);
 
-    let cleanLogs = _.uniqBy(logs, log => log.key);
+    let cleanLogs = _.uniqBy([...logs, ...wsLogs], log => log.key);
     let data = cleanLogs.map(log => {
         let time = new Date(parseInt(log.time)).toLocaleTimeString();
 
@@ -60,7 +60,7 @@ function Logs({ logs, updateLogs }) {
                     </div>
                 </div>
                 <BootstrapTable
-                    data={data.length < 100 ? data : data.slice(data.length - showing - 1, data.length - 1)}
+                    data={data.length < 50 ? data : data.slice(data.length - showing - 1, data.length - 1)}
                     bordered={false}
                     height={data.length > 14 ? '600' : undefined}
                     bodyStyle={{ overflow: 'overlay' }}
@@ -114,19 +114,19 @@ function Logs({ logs, updateLogs }) {
 const styles = {
     control: provided => ({
         ...provided,
-        ...selectText,
+        ...header,
         backgroundColor: 'none',
         border: '0 !important',
         boxShadow: 'none',
         width: ("Showing 1000 Logs").length * 12,
         '&:hover' : {
-            ...selectText,
+            ...header,
             border: '0 !important'
         }
     }),
     valueContainer: provided => ({
         ...provided,
-        ...selectText,
+        ...header,
     }),
     dropdownIndicator: provided => ({
         ...provided,
@@ -138,11 +138,11 @@ const styles = {
     }),
     singleValue: provided => ({
         ...provided,
-        ...selectText,
+        ...header,
     }),
     option: provided => ({
         ...provided,
-        ...header,
+        ...text,
         '&hover' : {
           backgroundColor: 'red',  
         },
@@ -153,7 +153,6 @@ const styles = {
     })
 }
 
-const selectText = { fontSize: 15, fontWeight: '400', color: '#787878' };
 const header = { fontSize: 14, fontWeight: '400', color: '#787878' };
 const text = { fontSize: 13, fontWeight: '300', color: '#787878' };
 const textSmall = { fontSize: 12, fontWeight: '400', color: '#787878' };

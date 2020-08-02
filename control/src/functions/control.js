@@ -43,7 +43,7 @@ const getComponents = callback => {
 function useControlState() {
     const [key, setKey] = useState("dashboard");
     const [logs, setLogs] = useState([]);
-    const [trueLogs, setTrueLogs] = useState([]);
+    const [wsLogs, setWsLogs] = useState([]);
     const [components, setComponents] = useState([]);
     const [simulationState, setSimulationState] = useState('Ready');
     const [init, setInit] = useState(true);
@@ -59,12 +59,10 @@ function useControlState() {
             };
             client.onmessage = data => {
                 if (key === 'logs') {
-                    let tempLogs = trueLogs;
-                    tempLogs.push({
+                    setWsLogs(prev => [...prev, {
                         ...JSON.parse(_.get(data, 'data', '{}')),
                         time: Date.now().toString()
-                    });
-                    setLogs(_.uniqWith(tempLogs, _.isEqual));
+                    }]);
                 }
             };
             client.onclose = () => {
@@ -75,15 +73,13 @@ function useControlState() {
     };
 
 
-    const updateLogs = (callback=()=>{} ) => {
+    const updateLogs = (callback=_.noop) => {
         if (key === 'logs') {
             getLogs(init, data => {
-                let tempLogs = trueLogs;
-                tempLogs = tempLogs.concat(data);
-                setTrueLogs(_.uniqWith(tempLogs, _.isEqual));
-                setLogs(_.uniqWith(tempLogs, _.isEqual));
+                setLogs(prev => [...prev, ...data]);
+                setWsLogs([]);
                 setInit(false);
-                callback()
+                callback && callback();
             });
         };
     };
@@ -138,6 +134,7 @@ function useControlState() {
         key,
         setKey,
         logs,
+        wsLogs,
         components,
         updateLogs,
         update,
