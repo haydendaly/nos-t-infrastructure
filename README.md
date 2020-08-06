@@ -25,10 +25,11 @@ $ docker-compose -f docker-compose.example.yml up
 To start the simulation, run the following command.
 
 ```console
+$ /bin/bash init.sh
 $ docker-compose up
 ```
 
-After running, it is good practice to run the following command to negate cached data.
+The first command clones all the repositories listed in `init.sh` into the folder components. After running, it is good practice to run the following command to negate cached data.
 
 ```console
 $ docker-compose down

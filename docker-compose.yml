@@ -92,20 +92,6 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
-  # weather-node:
-  #   container_name: "weather-node"
-  #   build:
-  #     context: ./components/weather-node/Node
-  #     dockerfile: Dockerfile
-  #   # tty: true
-  #   restart: always
-  #   depends_on:
-  #     - api
-  #   environment:
-  #     - BROKER_HOST=testbed.code-lab.org
-  #     - BROKER_PORT=1883
-  #     - SLEEP=3
-
   vapsat:
     container_name: "vapsat"
     build:
@@ -129,6 +115,36 @@ services:
     restart: always
     depends_on:
       - api
+    environment:
+      - BROKER_HOST=testbed.code-lab.org
+      - BROKER_PORT=1883
+      - SLEEP=3
+
+  weather-node:
+    container_name: "weather-node"
+    build:
+      context: ./components/weather-node/Node
+      dockerfile: Dockerfile
+    # tty: true
+    restart: always
+    depends_on:
+      - api
+    environment:
+      - BROKER_HOST=testbed.code-lab.org
+      - BROKER_PORT=1883
+      - SLEEP=3
+
+  mattsat:
+    container_name: "mattsat"
+    build:
+      context: ./components/mattsat
+      dockerfile: Dockerfile
+    # tty: true
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - 8080:8080
     environment:
       - BROKER_HOST=testbed.code-lab.org
       - BROKER_PORT=1883
