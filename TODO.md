@@ -2,8 +2,6 @@
 
 Mandatory
 1. Get everyone's components working
-2. Stop not working for example simulation
-3. One extra log bug
 
 These are remaining tasks I have semi-ordered by priority.
 1. Add documentation/checklist for building components for the system.

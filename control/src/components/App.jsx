@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { Nav, NavItem } from 'react-bootstrap';
 import '../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
-import Dashboard from './Dashboard';
-import Logs from './Logs';
-import Documentation from './Documentation';
+import Loading from './Global/Loading';
+const Dashboard = lazy(() => import('./Dashboard'));
+const Logs = lazy(() => import('./Logs'));
+const Documentation = lazy(() => import('./Documentation'));
 import control from '../functions/control';
 import '../styles/style.scss';
 
@@ -26,7 +27,7 @@ function App() {
     }, [key]);
 
     return (
-        <div>
+        <Suspense fallback={<Loading />}>
             <Nav
                 activeKey={key}
                 onSelect={setKey}
@@ -46,10 +47,10 @@ function App() {
                     <div style={key === "documentation" ? selected : { height: 2.5 }} />
                 </NavItem>
             </Nav>
-            {key === 'dashboard' ? <Dashboard components={components} simulationState={simulationState} toggleSimulation={toggleSimulation}/> : false}
+            {key === 'dashboard' ? <Dashboard components={components} simulationState={simulationState} toggleSimulation={toggleSimulation} /> : false}
             {key === 'logs' ? <Logs logs={logs} wsLogs={wsLogs} updateLogs={updateLogs} /> : false}
             {key === 'documentation' ? <Documentation /> : false}
-        </div>
+        </Suspense>
     );
 };
 

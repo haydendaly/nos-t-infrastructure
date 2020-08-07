@@ -12,6 +12,10 @@ function Logs({ logs, wsLogs, updateLogs }) {
     const [keys, setKeys] = useState([]);
 
     let cleanLogs = _.uniqBy([...logs, ...wsLogs], log => log.key);
+
+    // not great practice but accounts for messages with slightly different UNIX timestamps coming from control / WS to negate duplicates
+    cleanLogs = _.uniqBy(cleanLogs, log => log.topic + log.name + log.time.substring(0, log.time.length - 2) + JSON.stringify(log.properties));
+
     let data = cleanLogs.map(log => {
         let time = new Date(parseInt(log.time)).toLocaleTimeString();
 
@@ -144,7 +148,6 @@ const styles = {
         ...provided,
         ...text,
         '&hover' : {
-          backgroundColor: 'red',  
         },
     }),
     menu: provided => ({

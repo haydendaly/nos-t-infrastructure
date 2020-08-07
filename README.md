@@ -35,5 +35,11 @@ The first command clones all the repositories listed in `init.sh` into the folde
 $ docker-compose down
 ```
 
+And this command for the same reason regarding the example simulation.
+
+```console
+$ docker-compose -f docker-compose.example.yml down
+```
+
 #### Questions?
 Direct any questions to hdaly1@stevens.edu
