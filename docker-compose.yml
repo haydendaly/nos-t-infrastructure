@@ -47,7 +47,7 @@ services:
     logging:
       driver: none
     expose:
-      - 3000
+      - 2000
     ports:
       - 2000:2000
     # depends_on:
@@ -140,6 +140,8 @@ services:
       context: ./components/mattsat
       dockerfile: Dockerfile
     # tty: true
+    logging: 
+      driver: none
     restart: always
     depends_on:
       - api

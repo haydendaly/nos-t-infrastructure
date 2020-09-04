@@ -17,7 +17,7 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
             component: component.name,
             description: component.description,
             subscriptions: subscriptions ? subscriptions.join(', ') : 'None',
-            resource: _.get(component.properties, 'resource', 'None'),
+            resource: _.get(component.properties, 'resources', []),
             type: _.get(component.properties, 'type', 'N/A'),
             status: simulationState
         };
@@ -135,6 +135,21 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
                         thStyle={header}
                         tdStyle={text}
                         width='100'
+                        dataFormat={cell => {
+                            console.log(cell, typeof cell)
+                            if (typeof cell == 'object' && cell !== {}) {
+                                // cell.map(o => {                            // cell.map(o => {
+                                //     if (typeof o == 'string') {
+                                //         return <p>{o}</p>
+                                //     } else {
+                                //         return <a>{o}</a>
+                                //     }
+                                // })
+                                return <a>Resource</a>
+                            } else {
+                                return <p>None</p>
+                            }
+                        }}
                     >
                         Resource
                 </THC>

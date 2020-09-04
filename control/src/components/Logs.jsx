@@ -34,7 +34,7 @@ function Logs({ logs, wsLogs, updateLogs }) {
         };
     });
 
-    let populateOptions = len => {
+    const populateOptions = len => {
         let options = [];
         for (let i = 50; i < (len + 51); i = i + 50) {
             options.push({ value: i, label: "Showing " + i + " Logs" });

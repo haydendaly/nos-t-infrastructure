@@ -103,10 +103,10 @@ function useControlState() {
         let d;
         d = new Date();
         d.setSeconds(d.getSeconds() + 30);
-        const utc = d.toISOString();
+        const utc = helper.toISO(d);
 
         d.setSeconds(d.getSeconds() + 36000);
-        const utcEnd = d.toISOString();
+        const utcEnd = helper.toISO(d);
 
         if (action === 'start' && (simulationState === 'Stopped' || simulationState === 'Ready')) {
             let startTime = _.get(properties, 'startTime', utc);
@@ -122,7 +122,7 @@ function useControlState() {
                 callback(data);
             });
         } else if (action === 'stop' && (simulationState === 'Running')) {
-            const now = (new Date).toISOString();
+            const now = helper.toISO(new Date)
             let simStopTime = _.get(properties, 'simStopTime', now);
             simStopTime = simStopTime !== null ? simStopTime : now;
             setSimulationState('Stopped');

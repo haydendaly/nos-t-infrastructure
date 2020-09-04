@@ -27,6 +27,24 @@ const request = (url, type="GET", send, body=null, defaultValue={}, format='json
         });
 };
 
+function pad(number) {
+    if (number < 10) {
+        return '0' + number;
+    }
+    return number;
+}
+
+const toISO = date => {
+    return date.getUTCFullYear() +
+        '-' + pad(date.getUTCMonth() + 1) +
+        '-' + pad(date.getUTCDate()) +
+        'T' + pad(date.getUTCHours()) +
+        ':' + pad(date.getUTCMinutes()) +
+        ':' + pad(date.getUTCSeconds()) +
+        '+00:00';
+}
+
 export default {
-    request
+    request,
+    toISO
 };
