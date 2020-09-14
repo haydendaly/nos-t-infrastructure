@@ -58,7 +58,7 @@ The schema for communication between the components is loosely based off the Sen
 }
 ```
 
-This example is for the start message and to stop the system, a similar message with the `type: "stop"` and just a `stopTime` field in ISO 8601 format will stop the system. If fields aren't provided in the control dashboard, the `startTime`/`simStartTime` will be defaulted to 30 seconds in the future, `simStopTime` will be defaulted to 36000 seconds in the future, ,and `timeScaling` will be defaulted to 600.
+This example is for the start message and to stop the system, a similar message with the `type: "stop"` and just a `stopTime` field in ISO 8601 format will stop the system. If fields aren't provided in the control dashboard, the `startTime` will be defaulted to 30 seconds in the future, `simStartTime` will be defaulted to one week in the past `simStopTime` will be defaulted to 6 days in the past, and `timeScaling` will be defaulted to 144.
 
 #### Sensor
 

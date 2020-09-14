@@ -100,22 +100,28 @@ function useControlState() {
     };
 
     const toggleSimulation = (action, properties = {}, callback = () => false) => {
-        let d;
+        let d, d2;
         d = new Date();
         d.setSeconds(d.getSeconds() + 30);
         const utc = helper.toISO(d);
 
-        d.setSeconds(d.getSeconds() + 36000);
-        const utcEnd = helper.toISO(d);
+        // back one day
+        d2 = new Date();
+        d2.setSeconds(d2.getSeconds() - 604800)
+        const utcPast = helper.toISO(d2);
+
+        d2.setSeconds(d2.getSeconds() + 86400);
+        const utcEnd = helper.toISO(d2);
 
         if (action === 'start' && (simulationState === 'Stopped' || simulationState === 'Ready')) {
             let startTime = _.get(properties, 'startTime', utc);
-            let simStartTime = _.get(properties, 'simStartTime', utc);
+            let simStartTime = _.get(properties, 'simStartTime', utcPast);
             let simStopTime = _.get(properties, 'simStopTime', utcEnd);
             let timeScalingFactor = _.get(properties, 'timeScalingFactor', 2);
 
             startTime = startTime !== null ? startTime : utc;
-            simStartTime = simStartTime !== null ? simStartTime : utc;
+            simStartTime = simStartTime !== null ? simStartTime : utcPast;
+            simStopTime = simStopTime !== null ? simStopTime : utcEnd;
             timeScalingFactor = timeScalingFactor !== null ? timeScalingFactor : 2;
             toggle(action, { ...properties, startTime, simStartTime, timeScalingFactor, simStopTime }, data => {
                 setSimulationState('Running');

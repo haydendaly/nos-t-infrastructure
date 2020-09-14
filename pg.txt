@@ -1,0 +1,10 @@
+* Grogan needs schema
+* What administrative messages are needed
+
+I need to write technical documentation explaining the message schema MQTT
+	- topic/control Administrative messages
+	- schema
+
+Barriers:
+	- Meet NASA security requirements
+	- How to run Solace

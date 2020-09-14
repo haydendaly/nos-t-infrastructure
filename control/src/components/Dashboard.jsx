@@ -112,7 +112,7 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
                     <THC dataField='component'
                         thStyle={header}
                         tdStyle={textSmall}
-                        width='150'
+                        width='140'
                         dataSort
                     >
                         Component
@@ -126,7 +126,7 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
                     <THC dataField='subscriptions'
                         thStyle={header}
                         tdStyle={text}
-                        width='200'
+                        width='180'
                         dataSort
                     >
                         Subscriptions
@@ -136,19 +136,15 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
                         tdStyle={text}
                         width='100'
                         dataFormat={cell => {
-                            console.log(cell, typeof cell)
                             if (typeof cell == 'object' && cell !== {}) {
-                                // cell.map(o => {                            // cell.map(o => {
-                                //     if (typeof o == 'string') {
-                                //         return <p>{o}</p>
-                                //     } else {
-                                //         return <a>{o}</a>
-                                //     }
-                                // })
-                                return <a>Resource</a>
-                            } else {
-                                return <p>None</p>
+                                if (typeof cell[0] == 'string') {
+                                    return <p>{cell[0]}</p>
+                                } else if (typeof cell[0] == 'object') {
+                                    var key = Object.keys(cell[0])[0]
+                                    return <a href={cell[0][key]}>{key}</a>
+                                }
                             }
+                            return <p>None</p>;
                         }}
                     >
                         Resource
@@ -164,7 +160,7 @@ function Dashboard({ components, simulationState, toggleSimulation }) {
                     <THC dataField='status'
                         thStyle={header}
                         tdStyle={{ ...text, fontWeight: 400, color: simulationState === 'Ready' ? 'green' : simulationState === 'Running' ? 'blue' : 'red' }}
-                        width='80'
+                        width='90'
                         dataSort
                     >
                         Status
