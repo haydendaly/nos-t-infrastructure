@@ -1,6 +1,6 @@
 ## Simulation Architecture
 
-This repo contains an initial infrastructure for orchestrating simulation components.
+This repo contains an initial infrastructure for orchestrating simulation components. This was a quick prototype to demonstrate functionality and is now deprecated.
 
 There is an example simulation which consists of the following components.
 1. The control module starts the simulation by publishing a message to all the other components to start up under the `topic/control`.
@@ -42,4 +42,4 @@ $ docker-compose -f docker-compose.example.yml down
 ```
 
 #### Questions?
-Direct any questions to hdaly1@stevens.edu
+Direct any questions to hcd36@cornell.edu
