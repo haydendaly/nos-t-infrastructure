@@ -1,3 +1,5 @@
+![Architecture Diagram](https://github.com/haydendaly/nos-t-infrastructure-alpha/blob/master/doc_files/arch.png)
+
 ## Simulation Architecture
 
 This repo contains an initial infrastructure for orchestrating simulation components. This was a quick prototype to demonstrate functionality and is now deprecated.
